@@ -1,7 +1,7 @@
 import { useAuth } from './useAuth'
 
 export function useApi() {
-  const API_BASE = 'http://localhost:5001'
+  const API_BASE = (import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? 'http://localhost:5001' : '')).replace(/\/$/, '')
   const { getHeaders } = useAuth()
 
   // 处理 API 响应，如果是 401 则自动跳转到登录

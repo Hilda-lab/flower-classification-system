@@ -14,6 +14,17 @@ from .routes import pages_bp, auth_bp, detect_bp, admin_bp, user_bp
 def create_app():
     app = Flask(__name__, static_folder='static', template_folder='templates')
     app.config.from_object(Config)
+    if app.config['PRODUCTION']:
+        for key in ('SECRET_KEY', 'JWT_SECRET'):
+            if len(app.config[key]) < 32 or 'dev-key' in app.config[key]:
+                raise ValueError(f'{key} must be a random secret of at least 32 characters')
+        if len(app.config['ADMIN_PASSWORD']) < 12:
+            raise ValueError('ADMIN_PASSWORD must contain at least 12 characters')
+        if not app.config['CORS_ORIGINS'] or any(
+            not origin.startswith('https://') or '*' in origin
+            for origin in app.config['CORS_ORIGINS']
+        ):
+            raise ValueError('CORS_ORIGINS must list the exact HTTPS frontend origins')
 
     # 额外放两个路径给工具函数用
     app.config['PROJECT_ROOT'] = Path(Config.ROOT)
@@ -23,17 +34,7 @@ def create_app():
     db.init_app(app)
     cors.init_app(app, supports_credentials=True, resources={
         r"/api/*": {
-            "origins": [
-                "http://localhost:3000",
-                "http://127.0.0.1:3000",
-                "http://localhost:5173",
-                "http://127.0.0.1:5173",
-                "http://localhost:5174",
-                "http://127.0.0.1:5174",
-                "http://localhost:5001",
-                "http://127.0.0.1:5001",
-                "http://192.168.31.190:5001"
-            ],
+            "origins": app.config['CORS_ORIGINS'],
             "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
             "allow_headers": ["Content-Type", "Authorization"],
             "supports_credentials": True,
@@ -49,7 +50,7 @@ def create_app():
     # uploads dir
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'results'), exist_ok=True)
-    os.makedirs(os.path.join(app.config['BACKEND_DIR'], 'instance'), exist_ok=True)
+    os.makedirs(app.config['DATA_DIR'], exist_ok=True)
 
     # 初始化花卉模型服务（放到 app.extensions，路由直接复用）
     if app.config['PREVIEW_MODE']:
@@ -68,6 +69,11 @@ def create_app():
     app.register_blueprint(detect_bp, url_prefix='/api')
     app.register_blueprint(admin_bp, url_prefix='/api')
     app.register_blueprint(user_bp, url_prefix='/api')
+
+    @app.get('/healthz')
+    def health():
+        db.session.execute(text('SELECT 1'))
+        return jsonify(status='ok', model_loaded=app.extensions['model'] is not None)
 
     @app.route('/uploads/<filename>')
     def uploaded_file(filename):
@@ -105,7 +111,7 @@ def create_app():
             print("→ 创建默认管理员用户...")
             try:
                 admin = User(username='admin', email='admin@example.com', is_admin=True)
-                admin.set_password('admin123')
+                admin.set_password(app.config['ADMIN_PASSWORD'])
                 db.session.add(admin)
                 db.session.commit()
                 print(f"✓ 管理员用户已创建: username=admin, email=admin@example.com, is_admin=True")

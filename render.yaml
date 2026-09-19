@@ -1,0 +1,43 @@
+# Free trial deployment: SQLite and uploads are ephemeral.
+# For durable data, use a paid backend with a disk mounted at /var/data,
+# and set FLOWER_DATA_DIR=/var/data. Confirm pricing before upgrading.
+services:
+  - type: web
+    name: hilda-flower-api
+    runtime: python
+    plan: free
+    buildCommand: bash scripts/render-build.sh
+    startCommand: gunicorn 'flower_classification_backend.backend.app:create_app()' --bind 0.0.0.0:$PORT --workers 1 --threads 1 --timeout 180
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: APP_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: CORS_ORIGINS
+        sync: false
+      - key: FLOWER_NUM_THREADS
+        value: '1'
+      - key: FLOWER_DEVICE
+        value: cpu
+  - type: web
+    name: hilda-flower-web
+    runtime: static
+    rootDir: flower_classification_frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: 22.16.0
+      - key: VITE_API_BASE_URL
+        sync: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
