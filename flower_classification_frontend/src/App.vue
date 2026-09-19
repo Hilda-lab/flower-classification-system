@@ -16,11 +16,6 @@ import Navbar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
 import AuthModal from './components/AuthModal.vue'
 
-// 导入图标文件，让 Vite 处理它们的路径（包含哈希）
-import favicon from './assets/icons/favicon.ico'
-import appleIcon from './assets/icons/apple-touch-icon.png'
-import appleIconPrecomposed from './assets/icons/apple-touch-icon-precomposed.png'
-
 // 在应用启动时初始化认证状态
 const { initAuth } = useAuth()
 
@@ -38,9 +33,10 @@ onMounted(() => {
     link.href = href
   }
 
-  updateIcon('icon', favicon)
-  updateIcon('apple-touch-icon', appleIcon)
-  updateIcon('apple-touch-icon-precomposed', appleIconPrecomposed)
+  // 使用 public 中的花卉图标，避免被旧版垃圾桶 ICO 覆盖
+  updateIcon('icon', '/flower-icon.svg')
+  updateIcon('apple-touch-icon', '/flower-icon.svg')
+  updateIcon('apple-touch-icon-precomposed', '/flower-icon.svg')
 })
 </script>
 
