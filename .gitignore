@@ -68,15 +68,6 @@ data/labels/
 *.tar
 *.pt
 
-# Legacy garbage/YOLO training assets. They are not used by the flower runtime.
-garbage.yaml
-classname.txt
-garbage265_hierarchical/
-yolov5/
-yolov5-6.2/
-run_detect.sh
-flower_classification_backend/backend/services/yolo_service.py
-
 # --- Core ML 模型包 ---
 *.mlpackage/
 best.mlpackage/
@@ -88,9 +79,6 @@ best.mlpackage/
 *.gif
 !flower_classification_frontend/src/assets/*.jpg
 !flower_classification_frontend/src/assets/icons/*.png
-# Old garbage-classification screenshot; keep local only.
-docs/assets/garbage-classification-home.png
-
 # 忽略所有 txt 格式的 cookie 文件
 cookies.txt
 **/cookies.txt

@@ -10,7 +10,7 @@
 上传结果的 average_confidence 为 Top-1，与实时、历史页面、后台口径一致；保留字段名以兼容原前端。
 历史数据库表结构保持兼容，但后台类别分布只统计当前花卉模型记录。
 前端沿用原页面框架与样式，替换识别标签、主题文案、主页指南和图标；回收地图入口移除，旧地址转到关于页。
-旧 YOLO 训练目录和运行产物已加入 Git 忽略规则；使用 Vue 前端 3000 端口，5001 是 API 服务。
+旧 YOLO 训练目录已移除，运行产物（模型权重、上传图片、数据库）通过 Git 忽略规则排除；使用 Vue 前端 3000 端口，5001 是 API 服务。
 
 ## 运行
 
@@ -18,7 +18,7 @@
 
 ```powershell
 # 终端 1：已加载花卉模型的后端
-.\start-flower.ps1
+.\start-backend.ps1
 # 终端 2：前端
 .\start-frontend.ps1
 ```
@@ -27,7 +27,7 @@
 不要用 start-preview.ps1 启动真实识别：该脚本仍用于不加载模型的页面预览。
 若已有旧后端占用 5001，请先在它的终端按 Ctrl+C。
 
-新环境：创建 `.venv`，安装 `requirements-flower.txt`，前端安装 package-lock.json 对应依赖。
+新环境：创建 `.venv`，安装 `requirements.txt`，前端安装 package-lock.json 对应依赖。
 若权重缺失，在根目录执行：
 
 ```powershell
@@ -48,7 +48,7 @@
 - 权重通过 torch.load(weights_only=True) 加载；用本地 torchvision ResNet18 严格匹配全部参数。不执行下载项目的 Python 文件。
 - 作者 train.py 使用 ImageFolder；已核查数据包 train / valid / test 的目录一致，标签按字典序 Bellflower ... Tulip 排列。labels.json 保存此索引与中文名称。
 - 推理沿用作者验证变换：RGB、Resize((224,224))、ToTensor、均值和标准差均为 (0.5,0.5,0.5)。作者 ONNX 服务另外采用中心裁剪；本接入明确选择其 PyTorch 验证流程，上传与实时保持一致，并纠正 EXIF 方向。
-- 不沿用原垃圾模型的 448 输入、ImageNet 标准化、特殊数字标签重排和跨帧概率缓存。
+- 不沿用旧检测模型的 448 输入、ImageNet 标准化、特殊数字标签重排和跨帧概率缓存。
 
 ## 验证结果
 

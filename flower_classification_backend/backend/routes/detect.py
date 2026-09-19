@@ -22,7 +22,7 @@ def require_inference_service():
         if current_app.extensions.get('model') is None:
             return jsonify({
                 'status': 'error',
-                'message': '当前为本地预览模式，模型未加载，暂时无法识别图片。请运行 start-flower.ps1 启动花卉识别。'
+                'message': '当前为本地预览模式，模型未加载，暂时无法识别图片。请运行 start-backend.ps1 启动花卉识别。'
             }), 503
 
 

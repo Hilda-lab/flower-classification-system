@@ -58,23 +58,8 @@
         margin-top: 30px;
     }
 
-    .badge-recyclable {
-        background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
-        color: white;
-    }
-
-    .badge-harmful {
-        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-        color: white;
-    }
-
-    .badge-kitchen {
-        background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
-        color: white;
-    }
-
-    .badge-other {
-        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    .badge-flower {
+        background: linear-gradient(135deg, #f472b6 0%, #a78bfa 100%);
         color: white;
     }
 
@@ -475,13 +460,7 @@
                 // 创建检测到的物体标签
                 let objectsHtml = '';
                 for (const [className, count] of Object.entries(detectedObjects)) {
-                    let badgeClass = '';
-                    switch(className) {
-                        case '可回收': badgeClass = 'badge-recyclable'; break;
-                        case '有害': badgeClass = 'badge-harmful'; break;
-                        case '厨余': badgeClass = 'badge-kitchen'; break;
-                        case '其他': badgeClass = 'badge-other'; break;
-                    }
+                    const badgeClass = 'badge-flower';
                     objectsHtml += `<span class="badge rounded-pill ${badgeClass} me-1">${className}(${count})</span>`;
                 }
                 
@@ -607,13 +586,7 @@
                 const y2 = Math.round(bbox[3]);
                 
                 // 确定类别样式
-                let badgeClass = '';
-                switch(result.class_name) {
-                    case '可回收': badgeClass = 'badge-recyclable'; break;
-                    case '有害': badgeClass = 'badge-harmful'; break;
-                    case '厨余': badgeClass = 'badge-kitchen'; break;
-                    case '其他': badgeClass = 'badge-other'; break;
-                }
+                const badgeClass = 'badge-flower';
                 
                 row.innerHTML = `
                     <th scope="row">${index + 1}</th>

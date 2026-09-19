@@ -282,11 +282,8 @@ const drawResults = (data) => {
     const [x1, y1, x2, y2] = item.bbox;
     const width = x2 - x1;
     const height = y2 - y1;
-    let color = '#6c757d';
-    if (item.class_name.includes('可回收')) color = '#3576ca';
-    if (item.class_name.includes('有害')) color = '#dc3545';
-    if (item.class_name.includes('厨余')) color = '#28a745';
-    
+    const color = '#e75480';
+
     ctx.strokeStyle = color;
     ctx.lineWidth = 4;
     ctx.strokeRect(x1, y1, width, height);

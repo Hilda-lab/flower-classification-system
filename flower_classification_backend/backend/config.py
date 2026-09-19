@@ -20,7 +20,7 @@ class Config:
     # Flask
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-key-should-be-changed')
     # 显式启用后可在缺少模型权重时预览网站，识别接口返回 503。
-    PREVIEW_MODE = os.environ.get('GC_PREVIEW_MODE', '0') == '1'
+    PREVIEW_MODE = os.environ.get('FLOWER_PREVIEW_MODE', '0') == '1'
     # 请求体总大小限制（用于批量上传）；单张大小由业务逻辑单独限制
     MAX_CONTENT_LENGTH = 30 * 1024 * 1024  # 30MB
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -34,7 +34,7 @@ class Config:
     UPLOAD_FOLDER = str(ROOT / 'uploads')
 
     # SQLite（固定到 backend/instance 下）
-    DB_PATH = str(BASE_DIR / 'instance' / 'garbage_classification.db')
+    DB_PATH = str(BASE_DIR / 'instance' / 'flower_classification.db')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or f"sqlite:///{DB_PATH}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -43,4 +43,4 @@ class Config:
     SESSION_COOKIE_SECURE = False  # 开发环境设为False
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'  # 防止CSRF，允许same-site请求
-    SESSION_COOKIE_NAME = 'gc_session'
+    SESSION_COOKIE_NAME = 'flower_session'

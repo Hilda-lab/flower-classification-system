@@ -19,8 +19,9 @@ flower_classification_frontend/      Vue 3 + Vite 前端
 model_assets/flower-resnet18/        模型标签和本地权重缓存
 scripts/download_flower_model.py     下载并校验模型/测试数据
 docs/FLOWER_INTEGRATION.md           模型接入、接口和验证说明
-docs/PROJECT_AUDIT.md                上传 GitHub 前的文件审计
-start-flower.ps1                     启动真实模型后端
+requirements.txt                     完整识别功能依赖
+requirements-preview.txt             无模型预览依赖
+start-backend.ps1                    启动真实模型后端
 start-preview.ps1                    启动无模型预览后端
 start-frontend.ps1                   启动前端
 ```
@@ -30,7 +31,7 @@ start-frontend.ps1                   启动前端
 后端（PowerShell）：
 
 ```powershell
-./start-flower.ps1
+./start-backend.ps1
 ```
 
 前端（另一个终端）：

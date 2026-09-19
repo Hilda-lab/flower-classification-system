@@ -1,4 +1,4 @@
-# 仅网站预览；完整识别还需 yolov5/requirements.txt 以及原模型 best.pt。
+# 仅网站预览（不加载模型）；完整识别功能请安装 requirements.txt。
 Flask==3.1.1
 Flask-Cors==6.0.1
 Flask-SQLAlchemy==3.1.1

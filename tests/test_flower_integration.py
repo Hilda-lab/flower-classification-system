@@ -65,11 +65,12 @@ class FlowerIntegrationTests(unittest.TestCase):
         from flower_classification_backend.backend.models import DetectionHistory
         with self.app.app_context():
             db.session.add(DetectionHistory(image_path='legacy', result=json.dumps([
-                {'class_name': '厨余垃圾-菠萝', 'confidence': 0.8}]), confidence=0.8))
+                {'class_name': '旧模型类别', 'confidence': 0.8}]), confidence=0.8))
             db.session.commit()
             counts = StatsManager()._get_class_distribution()
             self.assertGreaterEqual(counts['向日葵'], 1)
-            self.assertEqual(counts['历史垃圾识别'], 1)
+            # 旧模型（非花卉任务）的历史记录不计入花卉类别分布
+            self.assertNotIn('旧模型类别', counts)
 
     def test_batch_partial_failure(self):
         response = self.client.post('/api/detect/batch', headers=self.headers, data={
@@ -89,12 +90,12 @@ class FlowerIntegrationTests(unittest.TestCase):
         response = self.client.post('/api/detect', headers=self.headers,
                                     data={'file': (io.BytesIO(b'bad'), 'bad.txt')})
         self.assertEqual(response.status_code, 400)
-        model = self.app.extensions['yolo']
+        model = self.app.extensions['model']
         try:
-            self.app.extensions['yolo'] = None
+            self.app.extensions['model'] = None
             self.assertEqual(self.upload().status_code, 503)
         finally:
-            self.app.extensions['yolo'] = model
+            self.app.extensions['model'] = model
 
 
 if __name__ == '__main__':

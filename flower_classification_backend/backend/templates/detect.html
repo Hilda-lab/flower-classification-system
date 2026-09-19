@@ -53,10 +53,7 @@
         font-weight: bold;
         margin-right: 10px;
     }
-    .recyclable { background-color: #28a745; }
-    .harmful { background-color: #dc3545; }
-    .kitchen { background-color: #fd7e14; }
-    .other { background-color: #6c757d; }
+    .flower { background-color: #e75480; }
 </style>
 {% endblock %}
 
@@ -384,13 +381,9 @@
                 const item = document.createElement('div');
                 item.className = 'list-group-item';
                 
-                // 确定类别标签样式
-                let categoryClass = 'other';
-                const className = result.class_name.toLowerCase();
-                if (className.includes('可回收')) categoryClass = 'recyclable';
-                else if (className.includes('有害')) categoryClass = 'harmful';
-                else if (className.includes('厨余')) categoryClass = 'kitchen';
-                
+                // 花卉类别标签样式
+                const categoryClass = 'flower';
+
                 const confidence = (result.confidence * 100).toFixed(2);
                 
                 item.innerHTML = `
