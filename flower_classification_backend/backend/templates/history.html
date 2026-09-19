@@ -1,0 +1,661 @@
+{% extends "base.html" %}
+
+{% block title %}历史记录 - 花卉识别系统{% endblock %}
+
+{% block extra_head %}
+<style>
+    .history-container {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+
+    .history-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px 20px;
+        border-radius: 10px;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    .history-header h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .history-header p {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 1.05rem;
+    }
+
+    .thumbnail {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 2px solid #eee;
+    }
+
+    .thumbnail:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-color: #667eea;
+    }
+
+    .modal-image {
+        max-width: 100%;
+        max-height: 70vh;
+        border-radius: 8px;
+    }
+
+    .pagination {
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+    .badge-recyclable {
+        background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+        color: white;
+    }
+
+    .badge-harmful {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        color: white;
+    }
+
+    .badge-kitchen {
+        background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        color: white;
+    }
+
+    .badge-other {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        margin: 40px 0;
+    }
+
+    .empty-icon {
+        font-size: 80px;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+
+    .empty-state h4 {
+        color: #666;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    .empty-state p {
+        color: #999;
+        margin-bottom: 20px;
+    }
+
+    .table-responsive {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .table {
+        margin: 0;
+    }
+
+    .table thead {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .table thead th {
+        border: none;
+        font-weight: 600;
+        padding: 20px 15px;
+    }
+
+    .table tbody tr {
+        transition: background-color 0.2s;
+        border-bottom: 1px solid #eee;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    .table tbody td {
+        vertical-align: middle;
+        padding: 15px;
+    }
+
+    .btn-sm {
+        padding: 8px 16px;
+        font-size: 0.875rem;
+    }
+
+    .progress {
+        height: 24px;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 60px 20px;
+    }
+
+    .loading-spinner .spinner-border {
+        width: 3rem;
+        height: 3rem;
+        color: #667eea;
+    }
+
+    .stats-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-top: 3px solid #667eea;
+    }
+
+    .stat-card .stat-number {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #667eea;
+    }
+
+    .stat-card .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+    }
+
+    .modal-header .btn-close {
+        filter: brightness(0) invert(1);
+    }
+
+    .details-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .details-content img {
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 768px) {
+        .details-content {
+            grid-template-columns: 1fr;
+        }
+        
+        .table {
+            font-size: 0.875rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="history-header">
+    <h1><i class="bi bi-clock-history me-2"></i>检测历史记录</h1>
+    <p>查看和管理您的花卉识别记录</p>
+</div>
+
+<div class="container history-container">
+    <!-- 未登录提示 -->
+    <div id="login-alert" class="alert alert-warning d-none" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        请<a href="/login" class="alert-link">登录</a>后查看您的历史记录。
+    </div>
+    
+    <!-- 加载中提示 -->
+    <div id="loading-spinner" class="loading-spinner text-center d-none">
+        <div>
+            <div class="spinner-border mb-3" role="status">
+                <span class="visually-hidden">加载中...</span>
+            </div>
+            <p class="text-muted">正在加载您的历史记录...</p>
+        </div>
+    </div>
+    
+    <!-- 空历史记录提示 -->
+    <div id="empty-state" class="empty-state d-none">
+        <div class="empty-icon">
+            <i class="bi bi-inbox"></i>
+        </div>
+        <h4>暂无检测记录</h4>
+        <p class="text-muted">您还没有进行过花卉识别<br>立即开始检测吧！</p>
+        <a href="/detect" class="btn btn-primary mt-3">
+            <i class="bi bi-camera me-2"></i>开始检测
+        </a>
+    </div>
+    
+    <!-- 历史记录列表 -->
+    <div id="history-list" class="d-none">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">检测时间</th>
+                        <th scope="col">原始图片</th>
+                        <th scope="col">检测结果</th>
+                        <th scope="col">检测到的物体</th>
+                        <th scope="col">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table-body">
+                    <!-- 记录将通过JS动态插入 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 分页 -->
+        <nav aria-label="历史记录分页">
+            <ul class="pagination" id="pagination">
+                <!-- 分页将通过JS动态插入 -->
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- 查看图片模态框 -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">
+                    <i class="bi bi-image me-2"></i>查看图片
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center" style="background: #f8f9fa;">
+                <img id="modal-image" src="#" alt="大图预览" class="modal-image" style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 检测详情模态框 -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel">
+                    <i class="bi bi-search me-2"></i>检测详情分析
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 图片对比 -->
+                <div class="details-content mb-4">
+                    <div>
+                        <h6 class="mb-3 text-center"><i class="bi bi-image me-2"></i>原始图片</h6>
+                        <img id="details-original-image" src="#" alt="原始图片" class="img-fluid rounded" style="width: 100%; max-height: 400px; object-fit: contain;">
+                    </div>
+                    <div>
+                        <h6 class="mb-3 text-center"><i class="bi bi-check-circle me-2"></i>检测结果</h6>
+                        <img id="details-result-image" src="#" alt="检测结果" class="img-fluid rounded" style="width: 100%; max-height: 400px; object-fit: contain;">
+                    </div>
+                </div>
+                
+                <!-- 检测结果表格 -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-list-check me-2"></i>检测详情
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col" style="width: 50px;">#</th>
+                                        <th scope="col" style="width: 100px;">花卉类别</th>
+                                        <th scope="col" style="width: 150px;">置信度</th>
+                                        <th scope="col">位置信息</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="details-table-body">
+                                    <!-- 结果将通过JS动态插入 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="download-details-btn">
+                    <i class="bi bi-download me-1"></i>下载结果
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block user_status_check %}
+<script>
+    // 为 history 页面定制用户状态检查
+    UserManager.checkLoginStatus({
+        onSuccess: function(user) {
+            console.log('✓ history.html: 用户已认证，准备加载历史记录');
+            // 加载历史记录
+            loadHistory(1);
+        },
+        onFailure: function() {
+            console.warn('✗ history.html: 用户未登录，显示登录提示');
+            document.getElementById('loading-spinner').classList.add('d-none');
+            document.getElementById('login-alert').classList.remove('d-none');
+        }
+    });
+</script>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 元素
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const emptyState = document.getElementById('empty-state');
+        const historyList = document.getElementById('history-list');
+        const historyTableBody = document.getElementById('history-table-body');
+        const pagination = document.getElementById('pagination');
+        const modalImage = document.getElementById('modal-image');
+        const detailsOriginalImage = document.getElementById('details-original-image');
+        const detailsResultImage = document.getElementById('details-result-image');
+        const detailsTableBody = document.getElementById('details-table-body');
+        const downloadDetailsBtn = document.getElementById('download-details-btn');
+        
+        // 模态框
+        const imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+        const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+        
+        // 变量
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentHistoryData = null;
+        let selectedDetailsData = null;
+        
+        // 绑定事件
+        downloadDetailsBtn.addEventListener('click', downloadDetailsResult);
+        
+        // 注意：logout-btn 的事件绑定已由 base.html 中的 UserManager 统一处理
+        
+        function loadHistory(page) {
+            // 统一用 classList 控制
+            loadingSpinner.classList.remove('d-none'); // 显示加载
+            historyList.classList.add('d-none');      // 隐藏列表
+            emptyState.classList.add('d-none');       // 隐藏空状态
+            
+            fetch(`/api/user/history?page=${page}&per_page=10`)
+                .then(response => {
+                    if (!response.ok) throw new Error('加载失败');
+                    return response.json();
+                })
+                .then(data => {
+                    loadingSpinner.classList.add('d-none'); // 核心：加载完一定要隐藏！
+                    currentHistoryData = data;
+                    
+                    if (!data.history || data.history.length === 0) {
+                        emptyState.classList.remove('d-none');
+                    } else {
+                        renderHistoryTable(data.history);
+                        renderPagination(data.current_page, data.pages);
+                        historyList.classList.remove('d-none');
+                    }
+                })
+                .catch(error => {
+                    loadingSpinner.classList.add('d-none'); // 报错也要隐藏，否则卡死
+                    console.error('Error loading history:', error);
+                    alert("加载失败，请检查网络连接");
+                });
+        }
+        
+        function renderHistoryTable(images) {
+            historyTableBody.innerHTML = '';
+            
+            images.forEach(image => {
+                const row = document.createElement('tr');
+                
+                // 格式化日期时间
+                const createdAt = new Date(image.created_at);
+                const formattedDate = createdAt.toLocaleDateString('zh-CN') + ' ' + 
+                    createdAt.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+                
+                // 统计检测到的物体
+                const detectedObjects = {};
+                image.results.forEach(result => {
+                    detectedObjects[result.class_name] = (detectedObjects[result.class_name] || 0) + 1;
+                });
+                
+                // 创建检测到的物体标签
+                let objectsHtml = '';
+                for (const [className, count] of Object.entries(detectedObjects)) {
+                    let badgeClass = '';
+                    switch(className) {
+                        case '可回收': badgeClass = 'badge-recyclable'; break;
+                        case '有害': badgeClass = 'badge-harmful'; break;
+                        case '厨余': badgeClass = 'badge-kitchen'; break;
+                        case '其他': badgeClass = 'badge-other'; break;
+                    }
+                    objectsHtml += `<span class="badge rounded-pill ${badgeClass} me-1">${className}(${count})</span>`;
+                }
+                
+                row.innerHTML = `
+                    <td>${formattedDate}</td>
+                    <td>
+                        <img src="${image.original_url}" alt="原始图片" class="thumbnail original-image" 
+                            data-image-url="${image.original_url}" data-image-type="原始图片">
+                    </td>
+                    <td>
+                        <img src="${image.result_url}" alt="检测结果" class="thumbnail result-image" 
+                            data-image-url="${image.result_url}" data-image-type="检测结果">
+                    </td>
+                    <td>${objectsHtml || '<span class="text-muted">未检测到物体</span>'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary view-details" data-image-id="${image.id}">
+                            <i class="bi bi-search me-1"></i> 查看详情
+                        </button>
+                    </td>
+                `;
+                
+                historyTableBody.appendChild(row);
+            });
+            
+            // 添加事件监听器
+            document.querySelectorAll('.thumbnail').forEach(img => {
+                img.addEventListener('click', function() {
+                    modalImage.src = this.getAttribute('data-image-url');
+                    document.getElementById('imageModalLabel').textContent = this.getAttribute('data-image-type');
+                    imageModal.show();
+                });
+            });
+            
+            document.querySelectorAll('.view-details').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const imageId = this.getAttribute('data-image-id');
+                    showDetails(imageId);
+                });
+            });
+        }
+        
+        function renderPagination(currentPage, totalPages) {
+            pagination.innerHTML = '';
+            
+            // 上一页按钮
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+            prevLi.innerHTML = `
+                <a class="page-link" href="#" aria-label="上一页" ${currentPage === 1 ? 'tabindex="-1" aria-disabled="true"' : ''}>
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            `;
+            if (currentPage > 1) {
+                prevLi.querySelector('a').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    loadHistory(currentPage - 1);
+                });
+            }
+            pagination.appendChild(prevLi);
+            
+            // 页码按钮
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            
+            if (endPage - startPage < 4 && startPage > 1) {
+                startPage = Math.max(1, endPage - 4);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageLi = document.createElement('li');
+                pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageLi.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                
+                pageLi.querySelector('a').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (i !== currentPage) {
+                        loadHistory(i);
+                    }
+                });
+                
+                pagination.appendChild(pageLi);
+            }
+            
+            // 下一页按钮
+            const nextLi = document.createElement('li');
+            nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            nextLi.innerHTML = `
+                <a class="page-link" href="#" aria-label="下一页" ${currentPage === totalPages ? 'tabindex="-1" aria-disabled="true"' : ''}>
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            `;
+            if (currentPage < totalPages) {
+                nextLi.querySelector('a').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    loadHistory(currentPage + 1);
+                });
+            }
+            pagination.appendChild(nextLi);
+        }
+        
+        function showDetails(imageId) {
+            const image = currentHistoryData.history.find(img => img.id == imageId);
+            if (!image) return;
+            
+            selectedDetailsData = image;
+            
+            // 设置图片
+            detailsOriginalImage.src = image.original_url;
+            detailsResultImage.src = image.result_url;
+            
+            // 填充结果表格
+            detailsTableBody.innerHTML = '';
+            
+            image.results.forEach((result, index) => {
+                const confidencePercent = (result.confidence * 100).toFixed(2);
+                const row = document.createElement('tr');
+                
+                // 获取边界框坐标
+                const bbox = result.bbox;
+                const x1 = Math.round(bbox[0]);
+                const y1 = Math.round(bbox[1]);
+                const x2 = Math.round(bbox[2]);
+                const y2 = Math.round(bbox[3]);
+                
+                // 确定类别样式
+                let badgeClass = '';
+                switch(result.class_name) {
+                    case '可回收': badgeClass = 'badge-recyclable'; break;
+                    case '有害': badgeClass = 'badge-harmful'; break;
+                    case '厨余': badgeClass = 'badge-kitchen'; break;
+                    case '其他': badgeClass = 'badge-other'; break;
+                }
+                
+                row.innerHTML = `
+                    <th scope="row">${index + 1}</th>
+                    <td><span class="badge rounded-pill ${badgeClass}">${result.class_name}</span></td>
+                    <td>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: ${confidencePercent}%" 
+                                aria-valuenow="${confidencePercent}" aria-valuemin="0" aria-valuemax="100">
+                                ${confidencePercent}%
+                            </div>
+                        </div>
+                    </td>
+                    <td>坐标: (${x1}, ${y1})-(${x2}, ${y2})</td>
+                `;
+                
+                detailsTableBody.appendChild(row);
+            });
+            
+            detailsModal.show();
+        }
+        
+        function downloadDetailsResult() {
+            if (!selectedDetailsData) return;
+            
+            // 创建包含检测结果的JSON数据
+            const resultData = {
+                date: selectedDetailsData.created_at,
+                filename: selectedDetailsData.filename,
+                results: selectedDetailsData.results || []
+            };
+            
+            // 创建下载链接
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(resultData, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "detection_result.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+        
+        // 注意：logout-btn 的事件绑定已由 base.html 中的 UserManager 统一处理
+    });
+</script>
+{% endblock %}

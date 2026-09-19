@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}登录 - 花卉识别系统{% endblock %}
+
+{% block nav_login %}active{% endblock %}
+
+{% block extra_head %}
+<style>
+    .auth-container {
+        max-width: 450px;
+        margin: 80px auto;
+    }
+    .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .auth-card {
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .auth-toggle {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .navbar-brand {
+        font-weight: bold;
+    }
+    .footer {
+        background-color: #212529;
+        color: white;
+        padding: 20px 0;
+        margin-top: 100px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container auth-container">
+    <div class="auth-header">
+        <h2>用户登录</h2>
+        <p class="text-muted">登录您的账户以使用所有功能</p>
+    </div>
+
+    <div class="card auth-card">
+        <div class="card-body p-4">
+            <div id="login-error" class="alert alert-danger d-none mb-3" role="alert"></div>
+
+            <form id="login-form">
+                <div class="mb-3">
+                    <label for="username" class="form-label">用户名</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <input type="text" class="form-control" id="login-username" name="username" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">密码</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="remember-me">
+                    <label class="form-check-label" for="remember-me">记住我</label>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">登录</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="auth-toggle">
+        <p>还没有账户？ <a href="/register">立即注册</a></p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function setupLoginForm() {
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+        
+        if (!loginForm) {
+            console.error('登录表单未找到');
+            return;
+        }
+        
+        console.log('✓ 登录表单已加载');
+        
+            loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            console.log('✓ 表单提交事件触发');
+            
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('remember-me').checked;
+            const rememberMe = document.getElementById('remember-me').checked;
+            
+            // 前端验证
+            if (!username || !password) {
+                loginError.textContent = '请输入用户名和密码';
+                loginError.classList.remove('d-none');
+                console.warn('⚠ 用户名或密码为空');
+                return;
+            }
+            
+            // 隐藏之前的错误信息
+            loginError.classList.add('d-none');
+            
+            // 准备请求数据
+            const requestData = {
+                username: username,
+                password: password,
+                remember_me: rememberMe
+            };
+            
+            console.log('→ 发送登录请求:', requestData);
+            
+            try {
+                // 发送登录请求
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'include',  // 重要：发送和保存 Cookie
+                    body: JSON.stringify(requestData)
+                });
+                
+                console.log('← 响应状态:', response.status);
+                const data = await response.json();
+                console.log('← 响应数据:', data);
+                
+                if (data.status === 'success') {
+                    console.log('✓ 登录成功，跳转中...');
+                    if (data.token) {
+                        window.AuthToken.set(data.token, rememberMe);
+                    } else {
+                        console.warn('⚠ 未返回 token，无法保存登录状态');
+                    }
+                    // 登录成功，跳转到首页
+                    window.location.href = '/';
+                } else {
+                    // 显示错误信息
+                    let errorMsg = data.message || '登录失败，请重试';
+                    loginError.textContent = errorMsg;
+                    loginError.classList.remove('d-none');
+                    console.warn('✗ 登录失败:', errorMsg);
+                }
+            } catch (error) {
+                loginError.textContent = '登录请求失败，请稍后重试';
+                loginError.classList.remove('d-none');
+                console.error('✗ 请求异常:', error);
+            }
+        });
+    }
+    
+    // 多种方式确保表单加载后执行
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupLoginForm);
+    } else {
+        setupLoginForm();
+    }
+    
+    // 备用方案：延迟执行
+    setTimeout(setupLoginForm, 500);
+</script>
+{% endblock %}

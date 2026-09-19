@@ -1,0 +1,74 @@
+/* variables.css */
+
+:root {
+  /* 基础色 */
+  --white: #ffffff;
+  --black: #000000;
+  --text-white: #f8f9fa;
+  --text-dark: #343a40;
+  --primary-color: #28a745;
+  --primary-rgb: 40, 167, 69;
+  --secondary-color: #6c757d;
+  --third-color: #dee2e6;
+  --fourth-color: #e9ecef;
+  --formcontrol-color: #ced4da;
+
+  /* 通知与状态色 */
+  --info-color: #0dcaf0;
+  --info-bg-color: #cfe2ff;
+  --info-color-text: #084298;
+
+  --warning-color: #fd7e14;
+  --warning-bg-color: #fff3cd;
+  --warning-color-text: #664d03;
+
+  --danger-color: #dc3545;
+  --danger-rgb: 220, 53, 69;
+  --danger-bg-color: #f8d7da;
+  --danger-color-text: #842029;
+
+  --success-color: #28a745;
+  --success-bg-color: #d1e7dd;
+  --success-color-text: #0f5132;
+
+  /* 兼容旧统计样式的颜色变量 */
+  --color-recyclable: #3576ca;
+  --color-harmful: #dc3545;
+  --color-kitchen: #28a745;
+  --color-other: #6c757d;
+
+  /* 导航与页脚色 */
+  --nav-gradient: linear-gradient(135deg, #1f3c3c 0%, #2d5a5a 100%);
+  --footer-bg: #2c3e50;
+  --footer-text: #ecf0f1;
+  --footer-border: #34495e;
+
+  /* 页面头部渐变 */
+  --page-header-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  /* 边框色 */
+  --dashed-border: #ddd;
+
+  /* 阴影 */
+  --box-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-standard: 0 8px 24px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.12);
+
+  /* 间距标准 */
+  --spacing-xs: 5px;
+  --spacing-sm: 15px;
+  --spacing-md: 20px;
+  --spacing-lg: 30px;
+
+  /* 圆角 */
+  --border-radius-sm: 6px;
+  --border-radius-md: 8px;
+  --border-radius: 12px;
+
+  /* 核心基础过渡效果 */
+  --transition-standard: all 0.3s ease;
+
+  /* Page Alignment Variables */
+  --page-margin: 3vw;
+  --page-margin-mobile: 5vw;
+}

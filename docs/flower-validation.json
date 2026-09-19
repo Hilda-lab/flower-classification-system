@@ -1,0 +1,708 @@
+{
+  "source": "Author release datasets/test; first 10 filenames per class, not independent field evaluation",
+  "samples": 100,
+  "correct": 96,
+  "elapsed_seconds": 4.213953495025635,
+  "results": [
+    {
+      "file": "datasets/test/Bellflower/14445955643_97d65da73a_c.jpg",
+      "expected": "Bellflower",
+      "predicted": "Bellflower",
+      "confidence": 0.9991042017936707,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Bellflower/14461834391_367e1d13d9_c.jpg",
+      "expected": "Bellflower",
+      "predicted": "Bellflower",
+      "confidence": 0.9882644414901733,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Bellflower/14478447735_5b2607483e_c.jpg",
+      "expected": "Bellflower",
+      "predicted": "Bellflower",
+      "confidence": 0.9999922513961792,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Bellflower/14483987163_ba14fdd5df_c.jpg",
+      "expected": "Bellflower",
+      "predicted": "Bellflower",
+      "confidence": 0.6820868253707886,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Bellflower/14501104890_4572239ca3_c.jpg",
+      "expected": "Bellflower",
+      "predicted": "Bellflower",
+      "confidence": 0.9999978542327881,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Bellflower/14522869504_625303a099_c.jpg",
+      "expected": "Bellflower",
+      "predicted": "Bellflower",
+      "confidence": 0.9999959468841553,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Bellflower/14544526963_0f58594c07_c.jpg",
+      "expected": "Bellflower",
+      "predicted": "Bellflower",
+      "confidence": 0.9999990463256836,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Bellflower/14554932378_8bb6abd4a1_c.jpg",
+      "expected": "Bellflower",
+      "predicted": "Bellflower",
+      "confidence": 0.9999713897705078,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Bellflower/14558242946_cd578bab66_c.jpg",
+      "expected": "Bellflower",
+      "predicted": "Bellflower",
+      "confidence": 0.9999185800552368,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Bellflower/14591624981_19d73622a2_c.jpg",
+      "expected": "Bellflower",
+      "predicted": "Bellflower",
+      "confidence": 0.9999958276748657,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Carnation/4976151870_cd7b11022b_c.jpg",
+      "expected": "Carnation",
+      "predicted": "Carnation",
+      "confidence": 0.8651586771011353,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Carnation/4981415021_7eb77c4fa1_c.jpg",
+      "expected": "Carnation",
+      "predicted": "Carnation",
+      "confidence": 0.937522292137146,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Carnation/5060486403_74106c8b03_c.jpg",
+      "expected": "Carnation",
+      "predicted": "Carnation",
+      "confidence": 0.9999614953994751,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Carnation/5067314259_b697de2a39_c.jpg",
+      "expected": "Carnation",
+      "predicted": "Carnation",
+      "confidence": 0.7716289162635803,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Carnation/5067314973_0430aab591_c.jpg",
+      "expected": "Carnation",
+      "predicted": "Carnation",
+      "confidence": 0.8233704566955566,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Carnation/5067316849_bea656fc52_c.jpg",
+      "expected": "Carnation",
+      "predicted": "Bellflower",
+      "confidence": 0.8537235260009766,
+      "correct": false
+    },
+    {
+      "file": "datasets/test/Carnation/5067923424_74249a07a2_c.jpg",
+      "expected": "Carnation",
+      "predicted": "Carnation",
+      "confidence": 0.9932070374488831,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Carnation/5067923958_79a446f38b_c.jpg",
+      "expected": "Carnation",
+      "predicted": "Lotus",
+      "confidence": 0.4935072660446167,
+      "correct": false
+    },
+    {
+      "file": "datasets/test/Carnation/5067927640_d5ed21ec4d_c.jpg",
+      "expected": "Carnation",
+      "predicted": "Carnation",
+      "confidence": 0.999212384223938,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Carnation/5067930166_5a10f83fc9_c.jpg",
+      "expected": "Carnation",
+      "predicted": "Carnation",
+      "confidence": 0.9998887777328491,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Daisy/Daisy (10).jpeg",
+      "expected": "Daisy",
+      "predicted": "Daisy",
+      "confidence": 0.9903210997581482,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Daisy/Daisy (100).jpeg",
+      "expected": "Daisy",
+      "predicted": "Daisy",
+      "confidence": 0.9908626079559326,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Daisy/Daisy (102).jpeg",
+      "expected": "Daisy",
+      "predicted": "Daisy",
+      "confidence": 0.999512791633606,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Daisy/Daisy (104).jpeg",
+      "expected": "Daisy",
+      "predicted": "Daisy",
+      "confidence": 0.9999251365661621,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Daisy/Daisy (108).jpeg",
+      "expected": "Daisy",
+      "predicted": "Daisy",
+      "confidence": 0.99991774559021,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Daisy/Daisy (11).jpeg",
+      "expected": "Daisy",
+      "predicted": "Daisy",
+      "confidence": 0.9999715089797974,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Daisy/Daisy (111).jpeg",
+      "expected": "Daisy",
+      "predicted": "Daisy",
+      "confidence": 0.9999158382415771,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Daisy/Daisy (12).jpeg",
+      "expected": "Daisy",
+      "predicted": "Daisy",
+      "confidence": 0.9999207258224487,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Daisy/Daisy (124).jpeg",
+      "expected": "Daisy",
+      "predicted": "Daisy",
+      "confidence": 0.9978278279304504,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Daisy/Daisy (125).jpeg",
+      "expected": "Daisy",
+      "predicted": "Daisy",
+      "confidence": 0.945000171661377,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Dandelion/4715045798_94d2d5b4de_c.jpg",
+      "expected": "Dandelion",
+      "predicted": "Dandelion",
+      "confidence": 0.9987198114395142,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Dandelion/4730806619_32a3610bdb_c.jpg",
+      "expected": "Dandelion",
+      "predicted": "Dandelion",
+      "confidence": 0.9876104593276978,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Dandelion/4735688325_9fa8c382f6_c.jpg",
+      "expected": "Dandelion",
+      "predicted": "Dandelion",
+      "confidence": 0.9995446801185608,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Dandelion/4754662208_c4f00d3179_c.jpg",
+      "expected": "Dandelion",
+      "predicted": "Dandelion",
+      "confidence": 0.9967251420021057,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Dandelion/4755051157_a8b6d0bdde_c.jpg",
+      "expected": "Dandelion",
+      "predicted": "Dandelion",
+      "confidence": 0.9961024522781372,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Dandelion/4756137539_f20d0ca518_c.jpg",
+      "expected": "Dandelion",
+      "predicted": "Dandelion",
+      "confidence": 0.9994910955429077,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Dandelion/4776638782_582ae4715a_c.jpg",
+      "expected": "Dandelion",
+      "predicted": "Dandelion",
+      "confidence": 0.9986214637756348,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Dandelion/4794838673_b9c5e7cb69_c.jpg",
+      "expected": "Dandelion",
+      "predicted": "Dandelion",
+      "confidence": 0.9921912550926208,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Dandelion/4809551911_2636453832_c.jpg",
+      "expected": "Dandelion",
+      "predicted": "Dandelion",
+      "confidence": 0.9953546524047852,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Dandelion/4812284203_8451f351ed_c.jpg",
+      "expected": "Dandelion",
+      "predicted": "Dandelion",
+      "confidence": 0.9982784986495972,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lavender/Lavender (10).jpeg",
+      "expected": "Lavender",
+      "predicted": "Lavender",
+      "confidence": 0.9999762773513794,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lavender/Lavender (104).jpeg",
+      "expected": "Lavender",
+      "predicted": "Lavender",
+      "confidence": 0.9999772310256958,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lavender/Lavender (106).jpeg",
+      "expected": "Lavender",
+      "predicted": "Lavender",
+      "confidence": 0.9985173344612122,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lavender/Lavender (19).jpeg",
+      "expected": "Lavender",
+      "predicted": "Lavender",
+      "confidence": 0.9996405839920044,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lavender/Lavender (2).jpeg",
+      "expected": "Lavender",
+      "predicted": "Lavender",
+      "confidence": 0.9999701976776123,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lavender/Lavender (25).jpeg",
+      "expected": "Lavender",
+      "predicted": "Lavender",
+      "confidence": 0.9999910593032837,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lavender/Lavender (26).jpeg",
+      "expected": "Lavender",
+      "predicted": "Lavender",
+      "confidence": 0.9660215973854065,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lavender/Lavender (3).jpeg",
+      "expected": "Lavender",
+      "predicted": "Lavender",
+      "confidence": 0.9999822378158569,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lavender/Lavender (30).jpeg",
+      "expected": "Lavender",
+      "predicted": "Lavender",
+      "confidence": 0.9975142478942871,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lavender/Lavender (35).jpeg",
+      "expected": "Lavender",
+      "predicted": "Lavender",
+      "confidence": 0.9999873638153076,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lily/Lily (1).jpeg",
+      "expected": "Lily",
+      "predicted": "Lily",
+      "confidence": 0.9980217218399048,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lily/Lily (10).jpeg",
+      "expected": "Lily",
+      "predicted": "Lily",
+      "confidence": 0.967913031578064,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lily/Lily (11).jpg",
+      "expected": "Lily",
+      "predicted": "Lily",
+      "confidence": 0.9998769760131836,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lily/Lily (113).jpeg",
+      "expected": "Lily",
+      "predicted": "Lily",
+      "confidence": 0.9958738684654236,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lily/Lily (13).jpg",
+      "expected": "Lily",
+      "predicted": "Lily",
+      "confidence": 0.9997556805610657,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lily/Lily (137).jpeg",
+      "expected": "Lily",
+      "predicted": "Lily",
+      "confidence": 0.9996457099914551,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lily/Lily (146).jpeg",
+      "expected": "Lily",
+      "predicted": "Lily",
+      "confidence": 0.9996973276138306,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lily/Lily (149).jpeg",
+      "expected": "Lily",
+      "predicted": "Lily",
+      "confidence": 0.9805759787559509,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lily/Lily (15).jpg",
+      "expected": "Lily",
+      "predicted": "Lily",
+      "confidence": 0.9484171867370605,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lily/Lily (150).jpeg",
+      "expected": "Lily",
+      "predicted": "Lily",
+      "confidence": 0.9990938901901245,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lotus/0718eba877.jpg",
+      "expected": "Lotus",
+      "predicted": "Lotus",
+      "confidence": 0.9992852807044983,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lotus/0835e79015.jpg",
+      "expected": "Lotus",
+      "predicted": "Lotus",
+      "confidence": 0.9996110796928406,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lotus/1574e81f5d.jpg",
+      "expected": "Lotus",
+      "predicted": "Lotus",
+      "confidence": 0.9964311122894287,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lotus/1839e5d16a.jpg",
+      "expected": "Lotus",
+      "predicted": "Lotus",
+      "confidence": 0.9945833086967468,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lotus/2413efd4ba.jpg",
+      "expected": "Lotus",
+      "predicted": "Lotus",
+      "confidence": 0.991986870765686,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lotus/2708ad39b8.jpg",
+      "expected": "Lotus",
+      "predicted": "Lotus",
+      "confidence": 0.9988025426864624,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lotus/2821eb0546.jpg",
+      "expected": "Lotus",
+      "predicted": "Lotus",
+      "confidence": 0.8226427435874939,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lotus/3357dee9d3.jpg",
+      "expected": "Lotus",
+      "predicted": "Lotus",
+      "confidence": 0.9976150989532471,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lotus/340cb06a10.jpg",
+      "expected": "Lotus",
+      "predicted": "Lotus",
+      "confidence": 0.9989509582519531,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Lotus/3733e0605a.jpg",
+      "expected": "Lotus",
+      "predicted": "Lotus",
+      "confidence": 0.9986843466758728,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Rose/3854766262_5a97b829ee_c.jpg",
+      "expected": "Rose",
+      "predicted": "Lily",
+      "confidence": 0.5362218022346497,
+      "correct": false
+    },
+    {
+      "file": "datasets/test/Rose/3882563557_c67743f8b9_c.jpg",
+      "expected": "Rose",
+      "predicted": "Rose",
+      "confidence": 0.9802743792533875,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Rose/5644131997_d2e4121371_c.jpg",
+      "expected": "Rose",
+      "predicted": "Rose",
+      "confidence": 0.9918385148048401,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Rose/5673757636_4d4b3ca108_c.jpg",
+      "expected": "Rose",
+      "predicted": "Rose",
+      "confidence": 0.9996955394744873,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Rose/rose (1).jpeg",
+      "expected": "Rose",
+      "predicted": "Rose",
+      "confidence": 0.9999241828918457,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Rose/rose (11).jpeg",
+      "expected": "Rose",
+      "predicted": "Rose",
+      "confidence": 0.9997825026512146,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Rose/rose (12).jpeg",
+      "expected": "Rose",
+      "predicted": "Rose",
+      "confidence": 0.9995191097259521,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Rose/rose (13).jpeg",
+      "expected": "Rose",
+      "predicted": "Rose",
+      "confidence": 0.9995583891868591,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Rose/rose (16).jpeg",
+      "expected": "Rose",
+      "predicted": "Rose",
+      "confidence": 0.9984098672866821,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Rose/rose (17).jpeg",
+      "expected": "Rose",
+      "predicted": "Rose",
+      "confidence": 0.99724942445755,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Sunflower/sunflower (10).jpeg",
+      "expected": "Sunflower",
+      "predicted": "Sunflower",
+      "confidence": 0.9999973773956299,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Sunflower/sunflower (100).jpeg",
+      "expected": "Sunflower",
+      "predicted": "Sunflower",
+      "confidence": 0.9938993453979492,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Sunflower/sunflower (102).jpeg",
+      "expected": "Sunflower",
+      "predicted": "Sunflower",
+      "confidence": 0.9997907280921936,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Sunflower/sunflower (104).jpeg",
+      "expected": "Sunflower",
+      "predicted": "Sunflower",
+      "confidence": 0.9995306730270386,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Sunflower/sunflower (106).jpeg",
+      "expected": "Sunflower",
+      "predicted": "Sunflower",
+      "confidence": 0.9973594546318054,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Sunflower/sunflower (107).jpeg",
+      "expected": "Sunflower",
+      "predicted": "Sunflower",
+      "confidence": 0.999745786190033,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Sunflower/sunflower (108).jpeg",
+      "expected": "Sunflower",
+      "predicted": "Sunflower",
+      "confidence": 0.9997616410255432,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Sunflower/sunflower (109).jpeg",
+      "expected": "Sunflower",
+      "predicted": "Sunflower",
+      "confidence": 0.9993492960929871,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Sunflower/sunflower (110).jpeg",
+      "expected": "Sunflower",
+      "predicted": "Sunflower",
+      "confidence": 0.9999963045120239,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Sunflower/sunflower (111).jpeg",
+      "expected": "Sunflower",
+      "predicted": "Sunflower",
+      "confidence": 0.9997695088386536,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Tulip/5678377397_b58beed418_c.jpg",
+      "expected": "Tulip",
+      "predicted": "Tulip",
+      "confidence": 0.9919863939285278,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Tulip/5688042001_eaf187030e_c.jpg",
+      "expected": "Tulip",
+      "predicted": "Lotus",
+      "confidence": 0.541740357875824,
+      "correct": false
+    },
+    {
+      "file": "datasets/test/Tulip/5691727641_24a06150f4_c.jpg",
+      "expected": "Tulip",
+      "predicted": "Tulip",
+      "confidence": 0.9937276840209961,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Tulip/5691746801_1e009afb15_c.jpg",
+      "expected": "Tulip",
+      "predicted": "Tulip",
+      "confidence": 0.9956061244010925,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Tulip/5691779912_cb3cdebcab_c.jpg",
+      "expected": "Tulip",
+      "predicted": "Tulip",
+      "confidence": 0.9719203114509583,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Tulip/5692301230_9c2e8195c0_c.jpg",
+      "expected": "Tulip",
+      "predicted": "Tulip",
+      "confidence": 0.9959200620651245,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Tulip/5697732034_1173d08fd7_c.jpg",
+      "expected": "Tulip",
+      "predicted": "Tulip",
+      "confidence": 0.9984285235404968,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Tulip/5699994479_76b3884245_c.jpg",
+      "expected": "Tulip",
+      "predicted": "Tulip",
+      "confidence": 0.9992101192474365,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Tulip/5699996939_12526b127e_c.jpg",
+      "expected": "Tulip",
+      "predicted": "Tulip",
+      "confidence": 0.9981661438941956,
+      "correct": true
+    },
+    {
+      "file": "datasets/test/Tulip/5700570246_7f457c965c_c.jpg",
+      "expected": "Tulip",
+      "predicted": "Tulip",
+      "confidence": 0.9992294311523438,
+      "correct": true
+    }
+  ]
+}

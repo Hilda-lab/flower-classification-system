@@ -1,0 +1,96 @@
+# .gitignore
+
+# --- 编辑器与系统 (你之前要求的) ---
+.idea/
+.vscode/
+.DS_Store
+
+# --- Python 运行缓存 ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- 虚拟环境 (非常重要，不要上传) ---
+venv/
+env/
+.venv/
+ENV/
+bin/
+lib/
+include/
+
+# --- 依赖打包与分发 ---
+dist/
+build/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+node_modules/
+.npm-cache/
+
+# --- 单元测试与覆盖率 ---
+htmlcov/
+.tox/
+.nox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# --- 本地环境变量 (包含 API 密钥等敏感信息) ---
+.env
+.venv
+.secret
+*.local
+.env.local
+config.local.py
+
+# --- 日志文件 ---
+*.log
+server.log
+
+# Runtime output (never commit user uploads or generated result files)
+uploads/
+flower_classification_backend/backend/uploads/
+flower_classification_frontend/dist/
+model_assets/flower-resnet18/datasets.zip
+
+# --- 数据文件与模型权重 ---
+datasets/
+data/images/
+data/labels/
+*.db
+*.zip
+*.tar
+*.pt
+
+# Legacy garbage/YOLO training assets. They are not used by the flower runtime.
+garbage.yaml
+classname.txt
+garbage265_hierarchical/
+yolov5/
+yolov5-6.2/
+run_detect.sh
+flower_classification_backend/backend/services/yolo_service.py
+
+# --- Core ML 模型包 ---
+*.mlpackage/
+best.mlpackage/
+
+# --- 媒体文件 ---
+*.jpg
+*.png
+*.jpeg
+*.gif
+!flower_classification_frontend/src/assets/*.jpg
+!flower_classification_frontend/src/assets/icons/*.png
+# Old garbage-classification screenshot; keep local only.
+docs/assets/garbage-classification-home.png
+
+# 忽略所有 txt 格式的 cookie 文件
+cookies.txt
+**/cookies.txt

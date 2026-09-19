@@ -1,0 +1,411 @@
+{% extends "base.html" %}
+
+{% block title %}花卉识别 - 花卉识别系统{% endblock %}
+
+{% block nav_detect %}active{% endblock %}
+
+{% block extra_head %}
+<style>
+    .page-header {
+        background-color: #f8f9fa;
+        padding: 30px 0;
+        margin-bottom: 30px;
+    }
+    .upload-area {
+        border: 2px dashed #ddd;
+        border-radius: 8px;
+        padding: 30px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        background-color: #f8f9fa;
+    }
+    .upload-area:hover {
+        border-color: #28a745;
+        background-color: #f1f9f1;
+    }
+    .upload-icon {
+        font-size: 60px;
+        color: #28a745;
+        margin-bottom: 15px;
+    }
+    .preview-container {
+        position: relative;
+        margin-top: 20px;
+    }
+    .preview-image {
+        max-width: 100%;
+        border-radius: 8px;
+    }
+    .loader {
+        display: none;
+        margin: 20px auto;
+    }
+    .result-container {
+        margin-top: 30px;
+        display: none;
+    }
+    .category-label {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        color: white;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+    .recyclable { background-color: #28a745; }
+    .harmful { background-color: #dc3545; }
+    .kitchen { background-color: #fd7e14; }
+    .other { background-color: #6c757d; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1>花卉识别</h1>
+        <p class="lead">上传一张花卉图片，AI 将自动识别花卉类别</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                支持 JPG、JPEG、PNG 格式的图片，最大 5MB。图片质量越清晰，识别效果越好。
+            </div>
+            
+            <div id="login-warning" class="alert alert-warning d-none">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                请先 <a href="/login" class="alert-link">登录</a> 以保存识别历史记录。
+            </div>
+            
+            <div id="error-alert" class="alert alert-danger d-none">
+                <i class="bi bi-exclamation-circle-fill me-2"></i>
+                <span id="error-message"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">上传图片</h5>
+                    
+                    <div class="upload-area" id="upload-area">
+                        <i class="bi bi-cloud-arrow-up upload-icon"></i>
+                        <h5>点击或拖拽图片到此处</h5>
+                        <p class="text-muted">支持JPG、JPEG、PNG格式</p>
+                        <input type="file" id="file-input" class="d-none" accept=".jpg,.jpeg,.png">
+                    </div>
+                    
+                    <div class="preview-container d-none" id="preview-container">
+                        <img id="preview-image" class="preview-image" src="" alt="预览图">
+                        <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2" id="remove-btn">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <button class="btn btn-primary" id="detect-btn" disabled>
+                            <i class="bi bi-search me-1"></i> 开始识别
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="loader text-center" id="loader">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">加载中...</span>
+                </div>
+                <p class="mt-2">正在分析图片，请稍候...</p>
+            </div>
+            
+            <div class="result-container" id="result-container">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">识别结果</h5>
+                        <div id="result-image-container" class="mb-3">
+                            <img id="result-image" class="img-fluid rounded" src="" alt="结果图">
+                        </div>
+                        
+                        <div id="detection-results">
+                            <div class="alert alert-success">
+                                <h6><i class="bi bi-check-circle-fill me-2"></i> 检测到 <span id="count-label">0</span> 个物体</h6>
+                            </div>
+                            
+                            <div class="list-group" id="results-list">
+                                <!-- 结果将动态添加到这里 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block user_status_check %}
+<script>
+    console.log('→ detect.html: 检查用户登录状态...');
+    fetch('/api/user', {
+        credentials: 'include'
+    })
+        .then(response => {
+            console.log('← detect.html: 响应状态', response.status);
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('未登录');
+        })
+        .then(data => {
+            console.log('← detect.html: 响应数据', data);
+            if (data.status === 'success' && data.user) {
+                console.log('✓ detect.html: 用户已登录:', data.user.username);
+                // 用户已登录
+                document.getElementById('login-item').classList.add('d-none');
+                document.getElementById('user-dropdown').classList.remove('d-none');
+                document.getElementById('username').textContent = data.user.username;
+                document.getElementById('login-warning').classList.add('d-none');
+                
+                // 如果是管理员，显示管理入口
+                if (data.user.is_admin) {
+                    const dropdownMenu = document.querySelector('#user-dropdown .dropdown-menu');
+                    const divider = document.querySelector('#user-dropdown .dropdown-divider');
+                    if (dropdownMenu && divider) {
+                        const adminItem = document.createElement('li');
+                        adminItem.innerHTML = '<a class="dropdown-item" href="/admin">管理后台</a>';
+                        dropdownMenu.insertBefore(adminItem, divider);
+                        console.log('✓ detect.html: 管理员菜单已添加');
+                    } else {
+                        console.warn('✗ detect.html: 找不到dropdown-menu或dropdown-divider元素');
+                    }
+                }
+                
+                // 绑定 logout 事件
+                UserManager.bindLogoutEvent();
+            } else {
+                // 用户未登录
+                console.warn('✗ detect.html: 用户未登录');
+                document.getElementById('login-warning').classList.remove('d-none');
+            }
+        })
+        .catch(error => {
+            console.error('✗ detect.html: 检查用户状态失败:', error);
+            document.getElementById('login-warning').classList.remove('d-none');
+        });
+</script>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // DOM元素
+    const fileInput = document.getElementById('file-input');
+    const uploadArea = document.getElementById('upload-area');
+    const previewContainer = document.getElementById('preview-container');
+    const previewImage = document.getElementById('preview-image');
+    const removeBtn = document.getElementById('remove-btn');
+    const detectBtn = document.getElementById('detect-btn');
+    const loader = document.getElementById('loader');
+    const resultContainer = document.getElementById('result-container');
+    const resultImage = document.getElementById('result-image');
+    const countLabel = document.getElementById('count-label');
+    const resultsList = document.getElementById('results-list');
+    const errorAlert = document.getElementById('error-alert');
+    const errorMessage = document.getElementById('error-message');
+    
+    // 注意：logout-btn 的事件绑定已由 base.html 中的 UserManager 统一处理
+    
+    // 上传区域点击事件
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // 拖拽处理
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('border-primary');
+    });
+    
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('border-primary');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-primary');
+        
+        if (e.dataTransfer.files.length) {
+            handleFile(e.dataTransfer.files[0]);
+        }
+    });
+    
+    // 文件选择
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) {
+            handleFile(fileInput.files[0]);
+        }
+    });
+    
+    // 删除预览图
+    removeBtn.addEventListener('click', () => {
+        resetUpload();
+    });
+    
+    // 检测按钮点击
+    detectBtn.addEventListener('click', () => {
+        if (fileInput.files.length) {
+            detectFlower(fileInput.files[0]);
+        }
+    });
+    
+    // 上传区域和文件处理的其他事件已在上面绑定
+    
+    // 处理选择的文件
+    function handleFile(file) {
+        // 检查文件类型
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        if (!validTypes.includes(file.type)) {
+            showError('只支持JPG、JPEG、PNG格式的图片');
+            return;
+        }
+        
+        // 检查文件大小
+        if (file.size > 5 * 1024 * 1024) {
+            showError('图片大小不能超过5MB');
+            return;
+        }
+        
+        // 显示预览
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImage.src = e.target.result;
+            previewContainer.classList.remove('d-none');
+            uploadArea.classList.add('d-none');
+            detectBtn.disabled = false;
+            hideError();
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    // 重置上传区域
+    function resetUpload() {
+        fileInput.value = '';
+        previewImage.src = '';
+        previewContainer.classList.add('d-none');
+        uploadArea.classList.remove('d-none');
+        detectBtn.disabled = true;
+        resultContainer.style.display = 'none';
+    }
+    
+    // 显示错误信息
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorAlert.classList.remove('d-none');
+    }
+    
+    // 隐藏错误信息
+    function hideError() {
+        errorAlert.classList.add('d-none');
+    }
+    
+    // 执行花卉识别
+    function detectFlower(file) {
+        // 显示加载中
+        loader.style.display = 'block';
+        resultContainer.style.display = 'none';
+        hideError();
+        
+        // 创建表单数据
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        // 发送识别请求
+        fetch('/api/detect', {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+        })
+        .then(response => {
+            loader.style.display = 'none';
+            
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.message || data.error || '识别失败，请重试');
+                });
+            }
+            
+            return response.json();
+        })
+        .then(data => {
+            // 显示结果
+            if (data.status === 'success') {
+                displayResults(data);
+            } else {
+                showError(data.message || '识别失败，请重试');
+            }
+        })
+        .catch(error => {
+            loader.style.display = 'none';
+            showError(error.message || '识别请求失败，请稍后重试');
+            console.error('识别错误:', error);
+        });
+    }
+    
+    // 显示识别结果
+    function displayResults(data) {
+        resultContainer.style.display = 'block';
+        
+        // 设置结果图片
+        if (data.result_url) {
+            resultImage.src = data.result_url;
+        } else {
+            // 如果没有结果图，使用原图
+            resultImage.src = previewImage.src;
+        }
+        
+        // 更新检测到的物体数量
+        const results = data.results || [];
+        countLabel.textContent = results.length;
+        
+        // 清空结果列表
+        resultsList.innerHTML = '';
+        
+        // 添加结果项
+        if (results.length === 0) {
+            resultsList.innerHTML = '<div class="alert alert-warning">未获得花卉候选结果</div>';
+        } else {
+            results.forEach((result, index) => {
+                const item = document.createElement('div');
+                item.className = 'list-group-item';
+                
+                // 确定类别标签样式
+                let categoryClass = 'other';
+                const className = result.class_name.toLowerCase();
+                if (className.includes('可回收')) categoryClass = 'recyclable';
+                else if (className.includes('有害')) categoryClass = 'harmful';
+                else if (className.includes('厨余')) categoryClass = 'kitchen';
+                
+                const confidence = (result.confidence * 100).toFixed(2);
+                
+                item.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="category-label ${categoryClass}">${result.class_name}</span>
+                            <span>物体 #${index + 1}</span>
+                        </div>
+                        <span class="badge bg-primary">${confidence}% 置信度</span>
+                    </div>
+                `;
+                
+                resultsList.appendChild(item);
+            });
+        }
+    }
+</script>
+{% endblock %}

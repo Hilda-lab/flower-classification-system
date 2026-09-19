@@ -1,0 +1,157 @@
+/* detect.css */
+
+/* .detect-page-wrapper {
+  // Removed, let PageHero dictate full width
+} */
+
+.detect-content {
+  margin-left: var(--page-margin);
+  margin-right: var(--page-margin);
+  padding-top: 0 !important;
+  padding-bottom: 5rem;
+}
+
+@media (max-width: 768px) {
+  .detect-content {
+    margin-left: var(--page-margin-mobile);
+    margin-right: var(--page-margin-mobile);
+  }
+}
+
+/* 上传区域样式 */
+.detect-page-wrapper .upload-area {
+  border: 2px dashed var(--dashed-border);
+  border-radius: var(--border-radius-md);
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition-standard);
+  background-color: var(--text-white);
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.detect-page-wrapper .upload-area:hover {
+  border-color: var(--primary-color);
+  background-color: rgba(var(--primary-rgb), 0.05);
+  transform: translateY(-5px) scale(1.03);
+}
+
+.detect-page-wrapper .upload-area.drag-over {
+  border-color: var(--primary-color);
+  background-color: rgba(var(--primary-rgb), 0.1);
+  border-style: solid;
+}
+
+.detect-page-wrapper .upload-icon {
+  font-size: 60px;
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* 预览容器 */
+.detect-page-wrapper .preview-container {
+  position: relative;
+  margin-top: var(--spacing-md);
+}
+
+.detect-page-wrapper .preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.detect-page-wrapper .image-wrapper {
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: #fff;
+  padding: 6px;
+}
+
+.detect-page-wrapper .image-frame {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.detect-page-wrapper .remove-btn {
+  position: absolute !important;
+  top: 6px !important;
+  right: 6px !important;
+  z-index: 5;
+}
+
+.detect-page-wrapper .preview-image {
+  width: 100%;
+  height: 96px;
+  display: block;
+  box-shadow: var(--shadow-standard);
+  object-fit: cover;
+}
+
+.detect-page-wrapper .preview-name {
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.detect-page-wrapper .selected-count {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* Category labels moved to shared labels.css component */
+
+/* 加载器 */
+.detect-page-wrapper .loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg);
+  color: var(--primary-color);
+}
+
+.detect-page-wrapper .spinner {
+  font-size: 3rem;
+}
+
+/* 结果容器 */
+.detect-page-wrapper .result-container {
+  animation: slideIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.detect-page-wrapper .fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .detect-page-wrapper .page-header h1 {
+    font-size: 2rem;
+  }
+
+  .detect-page-wrapper .upload-area {
+    padding: 20px;
+    min-height: 200px;
+  }
+
+  .detect-page-wrapper .upload-icon {
+    font-size: 40px;
+  }
+
+  .detect-page-wrapper .category-label {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .detect-page-wrapper {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}

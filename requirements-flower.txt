@@ -1,0 +1,4 @@
+-r requirements-preview.txt
+torch==2.8.0
+torchvision==0.23.0
+Pillow>=10.0,<12
