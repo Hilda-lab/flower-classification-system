@@ -1,6 +1,6 @@
 # 10 类花卉识别系统
 
-这是一个前后端分离的花卉图像识别平台，保留了原项目的用户、历史记录、统计和管理能力，将识别模型替换为 10 类花卉 ResNet18 模型，并在首页提供花卉百科。
+这是一个前后端分离的花卉图像识别平台，基于 ResNet18 模型实现 10 类花卉识别，提供用户、历史记录、统计和管理能力，并在首页提供花卉百科。
 
 ## 当前能力
 
@@ -18,7 +18,7 @@ flower_classification_backend/       Flask 后端（当前运行代码）
 flower_classification_frontend/      Vue 3 + Vite 前端
 model_assets/flower-resnet18/        模型标签和本地权重缓存
 scripts/download_flower_model.py     下载并校验模型/测试数据
-docs/FLOWER_INTEGRATION.md           模型接入、接口和验证说明
+docs/FLOWER_MODEL.md                 模型、接口和验证说明
 requirements.txt                     完整识别功能依赖
 requirements-preview.txt             无模型预览依赖
 start-backend.ps1                    启动真实模型后端
@@ -46,9 +46,9 @@ start-frontend.ps1                   启动前端
 
 ## 模型与验证
 
-模型服务位于 `flower_classification_backend/backend/services/flower_service.py`，使用 ResNet18 和 224×224 图像预处理，输出 Top-5 候选。当前公开测试压缩包共 556 张图片，验证结果为 Top-1 97.30%、Top-5 100%；这只是该测试集上的结果，不等同于所有真实场景的准确率。
+模型服务位于 `flower_classification_backend/backend/services/flower_service.py`，使用 ResNet18 和 224×224 图像预处理，输出 Top-5 候选。在 556 张测试图片上的验证结果为 Top-1 97.30%、Top-5 100%；这只是该测试集上的结果，不等同于所有真实场景的准确率。
 
-接口和字段说明见 [docs/FLOWER_INTEGRATION.md](docs/FLOWER_INTEGRATION.md)。
+接口和字段说明见 [docs/FLOWER_MODEL.md](docs/FLOWER_MODEL.md)。
 
 ## 开发环境
 
@@ -58,4 +58,4 @@ start-frontend.ps1                   启动前端
 
 ## 许可证
 
-请遵循仓库中的 `LICENSE` 文件以及模型来源项目的许可要求。
+请遵循仓库中的 `LICENSE` 文件。

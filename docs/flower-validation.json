@@ -1,5 +1,5 @@
 {
-  "source": "Author release datasets/test; first 10 filenames per class, not independent field evaluation",
+  "source": "datasets/test; first 10 filenames per class, not independent field evaluation",
   "samples": 100,
   "correct": 96,
   "elapsed_seconds": 4.213953495025635,

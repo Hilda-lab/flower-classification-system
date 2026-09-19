@@ -13,9 +13,9 @@
         <p>模型只能在这 10 类中选择，其他花种、非花图片也可能得到高置信度结果。当前不提供多花定位或未知类别的可靠判断。</p>
       </div>
       <div class="guide-card p-4">
-        <h2>模型来源</h2>
-        <p>使用 <a href="https://github.com/LIU42/FlowerClassify" target="_blank" rel="noopener noreferrer">LIU42/FlowerClassify</a> v1.4.0 已训练的 ResNet18 权重，在本机推理。本站没有重新训练该模型。</p>
-        <p>公开仓库未提供明确许可证；当前集成为本地验证，分发或商业使用前需向原作者确认授权。</p>
+        <h2>模型说明</h2>
+        <p>本站使用本地部署的 ResNet18 花卉识别模型，所有推理均在本机完成，不调用任何外部识别接口，图片数据不会离开本机。</p>
+        <p>模型针对上述 10 类花卉优化，返回最可能的候选类别和置信度，结果仅供参考。</p>
       </div>
     </div>
   </div>

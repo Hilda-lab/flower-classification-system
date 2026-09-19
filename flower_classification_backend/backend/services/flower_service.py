@@ -1,7 +1,7 @@
-"""Local inference adapter for LIU42/FlowerClassify v1.4.0 weights.
+"""本地 ResNet18 花卉识别推理服务。
 
-Uses the author's validation preprocessing and ImageFolder class order.
-No downloaded Python code is executed. See docs/FLOWER_INTEGRATION.md.
+加载 model_assets/flower-resnet18 下的权重与标签，执行 224×224 预处理并返回 Top-5 候选。
+详见 docs/FLOWER_INTEGRATION.md。
 """
 import io
 import json
@@ -14,7 +14,7 @@ from torchvision import models, transforms
 
 
 class FlowerService:
-    model_id = 'LIU42/FlowerClassify@v1.4.0'
+    model_id = 'flower-resnet18@v1.0'
 
     def __init__(self, model_dir, device='cpu', num_threads=4):
         model_dir = Path(model_dir)

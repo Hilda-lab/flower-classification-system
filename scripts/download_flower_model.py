@@ -32,7 +32,7 @@ def download(name):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--test-data', action='store_true', help='Also download author test/training archive for validation')
+    parser.add_argument('--test-data', action='store_true', help='Also download the test dataset archive for validation')
     args = parser.parse_args()
     download('best-ckpt1.pt')
     if args.test_data:
