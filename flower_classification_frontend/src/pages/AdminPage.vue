@@ -75,7 +75,7 @@
           <div class="col-md-3">
             <div class="card text-center h-100">
               <div class="card-body d-flex flex-column justify-content-center">
-                <h6 class="mb-2 stats-label stats-label-shift">平均信心度</h6>
+                <h6 class="mb-2 stats-label stats-label-shift">当前模型平均信心度</h6>
                 <div class="stats-value-slot">
                   <div v-if="stats.avg_confidence && stats.avg_confidence > 0" class="gc-progress-container" style="max-width: 140px; margin: 0 auto;">
                     <div
@@ -192,6 +192,7 @@
             <div class="card h-100">
               <div class="card-body">
                 <h6 class="card-title fw-bold mb-4">分类识别概况</h6>
+                <p class="text-muted small">类别分布与平均信心度仅统计当前五类模型的记录；识别总数包含历史模型。</p>
                 <div v-if="stats.class_distribution">
                   <div v-for="(count, className) in stats.class_distribution" :key="className" class="mb-3">
                     <div class="d-flex justify-content-between align-items-center mb-1">

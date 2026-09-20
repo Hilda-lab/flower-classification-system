@@ -1,4 +1,5 @@
 import json
+from flask import current_app
 from datetime import datetime
 from .base import BaseManager
 from ..models import Image, DetectionHistory
@@ -31,7 +32,7 @@ class StatsManager(BaseManager):
                     continue
                 top_item = max(results, key=lambda r: r.get('confidence', 0))
                 conf = float(top_item.get('confidence', 0))
-                if conf > 0:
+                if conf > 0 and self._is_current_model(top_item):
                     top_confidences.append(conf)
             except Exception:
                 continue
@@ -51,6 +52,12 @@ class StatsManager(BaseManager):
             'class_distribution': class_distribution
         }
 
+    @staticmethod
+    def _is_current_model(result):
+        model = current_app.extensions.get('model')
+        return (model is not None and result.get('task') == 'flower'
+                and result.get('model_id') == model.model_id)
+
     def _get_class_distribution(self):
         # Keep legacy records visible without relabeling them as flowers.
         class_counts = {}
@@ -61,7 +68,7 @@ class StatsManager(BaseManager):
                     continue
                 top = max(results, key=lambda item: item.get('confidence', 0))
                 # 统计面板只展示当前花卉模型产生的类别，旧模型记录不混入花卉分布。
-                if top.get('task') != 'flower':
+                if not self._is_current_model(top):
                     continue
                 name = top.get('class_name', '未知')
                 class_counts[name] = class_counts.get(name, 0) + 1

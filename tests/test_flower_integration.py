@@ -3,7 +3,6 @@ import io
 import json
 import tempfile
 import unittest
-import zipfile
 from pathlib import Path
 
 from flower_classification_backend.backend.config import Config
@@ -29,9 +28,8 @@ class FlowerIntegrationTests(unittest.TestCase):
             db.session.add(user)
             db.session.commit()
             cls.headers = {'Authorization': 'Bearer ' + JWTManager.encode_token(user.id, user.username)}
-        with zipfile.ZipFile(Path(Config.FLOWER_MODEL_DIR) / 'datasets.zip') as archive:
-            names = sorted(n for n in archive.namelist() if n.startswith('datasets/test/Sunflower/') and n.lower().endswith(('.jpg', '.jpeg', '.png')))
-            cls.photo = archive.read(names[0])
+        cls.fixtures = Path(__file__).parent / 'fixtures'
+        cls.photo = (cls.fixtures / 'sunflowers.jpg').read_bytes()
 
     @classmethod
     def tearDownClass(cls):
@@ -53,6 +51,8 @@ class FlowerIntegrationTests(unittest.TestCase):
         top = data['results'][0]
         self.assertEqual(top['class_name'], '向日葵')
         self.assertEqual(top['task'], 'flower')
+        self.assertEqual(top['model_id'], 'flower-resnet18-5class@2026-09-20')
+        self.assertEqual(top['class'], 3)
         self.assertIsNone(top['bbox'])
         self.assertAlmostEqual(data['average_confidence'], top['confidence'])
         for key in ('original_url', 'result_url'):
@@ -66,11 +66,39 @@ class FlowerIntegrationTests(unittest.TestCase):
         with self.app.app_context():
             db.session.add(DetectionHistory(image_path='legacy', result=json.dumps([
                 {'class_name': '旧模型类别', 'confidence': 0.8}]), confidence=0.8))
+            db.session.add(DetectionHistory(image_path='old-flower', result=json.dumps([
+                {'class_name': '历史花卉类别', 'confidence': 0.99, 'task': 'flower',
+                 'model_id': 'flower-test-previous-model'}]), confidence=0.99))
             db.session.commit()
             counts = StatsManager()._get_class_distribution()
             self.assertGreaterEqual(counts['向日葵'], 1)
             # 旧模型（非花卉任务）的历史记录不计入花卉类别分布
             self.assertNotIn('旧模型类别', counts)
+            self.assertNotIn('历史花卉类别', counts)
+            stats = StatsManager().get_comprehensive_stats()
+            current_confidences = []
+            for row in DetectionHistory.query.all():
+                result = json.loads(row.result)[0]
+                if result.get('model_id') == top['model_id']:
+                    current_confidences.append(result['confidence'])
+            self.assertAlmostEqual(stats['avg_confidence'], sum(current_confidences) / len(current_confidences))
+            self.assertIsNotNone(DetectionHistory.query.filter_by(image_path='old-flower').first())
+
+    def test_all_five_class_indices_and_frontend_labels(self):
+        expected = [('daisy', '雏菊'), ('dandelion', '蒲公英'), ('roses', '玫瑰'),
+                    ('sunflowers', '向日葵'), ('tulips', '郁金香')]
+        model = self.app.extensions['model']
+        frontend = json.loads((Config.ROOT / 'flower_classification_frontend/src/config/flowerLabels.json').read_text(encoding='utf-8'))
+        self.assertEqual([(x['id'], x['name'], x['name_en']) for x in frontend],
+                         [(i, cn, en) for i, (en, cn) in enumerate(expected)])
+        for index, (en, cn) in enumerate(expected):
+            with self.subTest(flower=en):
+                results, _, _ = model.detect_realtime((self.fixtures / f'{en}.jpg').read_bytes())
+                self.assertEqual((results[0]['class'], results[0]['class_name'], results[0]['class_name_en']),
+                                 (index, cn, en))
+                self.assertEqual(len(results), 5)
+                self.assertEqual({r['class'] for r in results}, set(range(5)))
+                self.assertAlmostEqual(sum(r['confidence'] for r in results), 1, places=5)
 
     def test_batch_partial_failure(self):
         response = self.client.post('/api/detect/batch', headers=self.headers, data={

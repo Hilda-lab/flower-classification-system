@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-md-8 mb-4">
           <h5>花卉识别系统</h5>
-          <p>使用训练好的 ResNet18 模型，在本机识别 10 类花卉，记录每一次探索。</p>
+          <p>使用训练好的 ResNet18 模型，在本机识别 5 类花卉，记录每一次探索。</p>
         </div>
         <div class="col-md-4 mb-4">
           <h5>链接</h5>

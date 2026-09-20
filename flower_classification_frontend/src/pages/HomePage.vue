@@ -5,7 +5,7 @@
       <div class="hero-content d-flex flex-column align-items-center">
         <h1 v-reveal class="hero-title text-center hero-fade-in anim-delay-2">🌸 花卉识别系统</h1>
         <p v-reveal class="hero-subtitle text-center hero-fade-in anim-delay-3">上传图片，AI 帮您快速识别花卉类别</p>
-        <p v-reveal class="hero-description text-center hero-fade-in anim-delay-4">使用深度学习和计算机视觉技术，发现身边花卉的名字</p>
+        <p v-reveal class="hero-description text-center hero-fade-in anim-delay-4">支持雏菊、蒲公英、玫瑰、向日葵和郁金香五类花卉</p>
         <div v-reveal class="hero-fade-in">
           <CommonButton
             @click="handleStart"
@@ -57,7 +57,7 @@
                 </div>
                 <h3 class="feature-description">
                   了解模型支持的花卉，<br>
-                  查看十种花卉的中英文名称，<br>
+                  查看五种花卉的中英文名称，<br>
                   从熟悉身边的花开始。
                 </h3>
                 <common-button
@@ -96,7 +96,7 @@
         </div>
       </div>
 
-      <h1 v-reveal id="classification-guide" class="section-title">支持的花卉</h1>
+      <h1 v-reveal id="classification-guide" class="section-title">五类花卉百科</h1>
       <div class="classification-guide">
         <div class="row g-4">
           <div v-for="flower in flowers" :key="flower.id" class="col-lg-6">

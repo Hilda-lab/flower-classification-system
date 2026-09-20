@@ -1,7 +1,7 @@
 """本地 ResNet18 花卉识别推理服务。
 
 加载 model_assets/flower-resnet18 下的权重与标签，执行 224×224 预处理并返回 Top-5 候选。
-详见 docs/FLOWER_INTEGRATION.md。
+详见 docs/FLOWER_MODEL.md。
 """
 import io
 import json
@@ -14,19 +14,19 @@ from torchvision import models, transforms
 
 
 class FlowerService:
-    model_id = 'flower-resnet18@v1.0'
+    model_id = 'flower-resnet18-5class@2026-09-20'
 
     def __init__(self, model_dir, device='cpu', num_threads=4):
         model_dir = Path(model_dir)
         self.labels = json.loads((model_dir / 'labels.json').read_text(encoding='utf-8'))
-        if [label['id'] for label in self.labels] != list(range(10)):
-            raise ValueError('花卉模型标签必须按训练索引 0–9 排列')
+        if [label['id'] for label in self.labels] != list(range(5)):
+            raise ValueError('花卉模型标签必须按训练索引 0–4 排列')
         self.class_names = [label['name'] for label in self.labels]
         self.device = torch.device(device)
         if self.device.type == 'cpu':
             torch.set_num_threads(max(1, num_threads))
         self.model = models.resnet18(weights=None, num_classes=len(self.labels))
-        state = torch.load(model_dir / 'best-ckpt1.pt', map_location='cpu', weights_only=True)
+        state = torch.load(model_dir / 'best-ckpt2.pt', map_location='cpu', weights_only=True)
         self.model.load_state_dict(state, strict=True)
         self.model.to(self.device).eval()
         self.transform = transforms.Compose([

@@ -1,0 +1,7 @@
+﻿class,train,valid,test,total
+daisy,443,95,95,633
+dandelion,629,135,134,898
+roses,449,96,96,641
+sunflowers,489,105,105,699
+tulips,559,120,120,799
+total,2569,551,550,3670

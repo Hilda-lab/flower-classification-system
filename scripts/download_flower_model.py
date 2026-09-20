@@ -1,39 +1,50 @@
-"""Download pinned public release assets, verifying SHA256 before replacement."""
+"""Install the trained five-class model from a local file or configured URL."""
 import argparse
 import hashlib
+import os
+import shutil
 import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE = 'https://github.com/LIU42/FlowerClassify/releases/download/v1.4.0/'
-ASSETS = {
-    'best-ckpt1.pt': 'be70e44fae334d14d4485d6fb49cb9b31637ebcdc2156b32da78678bd605d0f1',
-    'datasets.zip': '6804192695a6211c9fad1f3024c29ed9666d0e9115e0ccd310b67c1a46ceddf0',
-}
+MODEL_NAME = 'best-ckpt2.pt'
+MODEL_SHA256 = 'db18cc2e517fa7f008216164db8a7124856969739015072a00235d9ef3145b44'
 
 
-def download(name):
-    target = ROOT / 'model_assets' / 'flower-resnet18' / name
-    target.parent.mkdir(parents=True, exist_ok=True)
-    if target.is_file() and hashlib.sha256(target.read_bytes()).hexdigest() == ASSETS[name]:
-        print(f'Already verified: {target.name}')
+def verified(path):
+    return path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest() == MODEL_SHA256
+
+
+def install(source=None):
+    model_dir = Path(os.environ.get('FLOWER_MODEL_DIR', ROOT / 'model_assets' / 'flower-resnet18'))
+    target = model_dir / MODEL_NAME
+    if verified(target):
+        print(f'Already verified: {target}')
         return
-    partial = target.with_suffix(target.suffix + '.part')
-    digest = hashlib.sha256()
-    with urllib.request.urlopen(BASE + name, timeout=60) as response, partial.open('wb') as stream:
-        while chunk := response.read(1024 * 1024):
-            digest.update(chunk)
-            stream.write(chunk)
-    if digest.hexdigest() != ASSETS[name]:
-        raise RuntimeError(f'SHA256 mismatch: {name}; partial file retained for inspection')
-    partial.replace(target)
-    print(f'Downloaded and verified: {name}')
+    url = os.environ.get('FLOWER_MODEL_URL')
+    if not source and not url:
+        raise RuntimeError('Five-class model missing or invalid. Use --source PATH to best-ckpt2.pt, '
+                           'or set FLOWER_MODEL_URL to a direct download URL for that file.')
+    model_dir.mkdir(parents=True, exist_ok=True)
+    partial = target.with_suffix('.pt.part')
+    try:
+        if source:
+            shutil.copyfile(source, partial)
+        else:
+            if not url.startswith('https://'):
+                raise ValueError('FLOWER_MODEL_URL must use HTTPS')
+            with urllib.request.urlopen(url, timeout=60) as response, partial.open('wb') as stream:
+                shutil.copyfileobj(response, stream)
+        if not verified(partial):
+            raise RuntimeError('SHA256 mismatch: expected the trained five-class best-ckpt2.pt')
+        partial.replace(target)
+    finally:
+        partial.unlink(missing_ok=True)
+    print(f'Installed and verified: {target}')
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--test-data', action='store_true', help='Also download the test dataset archive for validation')
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--source', type=Path, help='Local path to the trained best-ckpt2.pt')
     args = parser.parse_args()
-    download('best-ckpt1.pt')
-    if args.test_data:
-        download('datasets.zip')
+    install(args.source)

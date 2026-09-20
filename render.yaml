@@ -26,6 +26,9 @@ services:
         value: '1'
       - key: FLOWER_DEVICE
         value: cpu
+      # HTTPS download URL for best-ckpt2.pt; SHA256 is pinned by the installer.
+      - key: FLOWER_MODEL_URL
+        sync: false
   - type: web
     name: hilda-flower-web
     runtime: static

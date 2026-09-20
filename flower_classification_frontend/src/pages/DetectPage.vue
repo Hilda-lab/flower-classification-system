@@ -10,7 +10,7 @@
       <!-- 页面头部 -->
       <PageHero
         title="识别检测"
-        subtitle="支持多种识别方式，识别 10 类花卉，支持单图、批量和摄像头"
+        subtitle="支持多种识别方式，识别 5 类花卉，支持单图、批量和摄像头"
         ctaText="开始识别"
         ctaLink="#flower-identification"
       />
@@ -22,7 +22,7 @@
             <i class="bi bi-info-circle-fill me-2 flex-shrink-0" aria-hidden="true"></i>
             <div>
               <p class="mb-2">支持 JPG、JPEG、PNG 格式的图片，可单张或批量上传（最多 20 张，单张不超过 5MB，总大小不超过 30MB）。图片质量越清晰，识别效果越好。</p>
-              <p class="mb-0"><strong>支持风铃草、康乃馨、雏菊、蒲公英、薰衣草、百合、荷花、玫瑰、向日葵、郁金香。模型始终从这 10 类中给出候选，非花图片和其他花种也可能被误判。</strong></p>
+              <p class="mb-0"><strong>支持雏菊、蒲公英、玫瑰、向日葵、郁金香。模型始终从这 5 类中给出候选，非花图片和其他花种也可能被误判。</strong></p>
             </div>
           </div>
 

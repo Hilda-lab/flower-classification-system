@@ -1,65 +1,64 @@
-# 花卉模型与接口说明
+# 五类花卉模型与接口说明
 
-## 模型
+## 当前模型
 
-系统使用本地部署的 ResNet18 花卉分类模型，完全本机推理，不调用任何外部识别 API。
-支持风铃草、康乃馨、雏菊、蒲公英、薰衣草、百合、荷花、玫瑰、向日葵、郁金香。
+- 自行训练的 ResNet18，ImageNet 预训练后全参数微调；分类头 512 → 5，总参数量 11,179,077。
+- 权重：`model_assets/flower-resnet18/best-ckpt2.pt`，44,794,251 字节（42.72 MiB）。
+- SHA256：`db18cc2e517fa7f008216164db8a7124856969739015072a00235d9ef3145b44`。
+- 模型标识：`flower-resnet18-5class@2026-09-20`。
+- 标签顺序：0 daisy / 雏菊、1 dandelion / 蒲公英、2 roses / 玫瑰、3 sunflowers / 向日葵、4 tulips / 郁金香。
+- PyTorch `weights_only=True` 加载，严格匹配全部参数。运行时仅需此权重和五类标签文件。
+- 输入：EXIF 方向纠正、RGB、Resize((224,224))、ToTensor、Normalize((0.5,0.5,0.5),(0.5,0.5,0.5))。
 
-- 后端提供单图 `/api/detect`、批量 `/api/detect/batch`、实时 `/api/detect/realtime` 接口，以及 JWT 鉴权、数据库、上传和历史记录。
-- 结果包含 class / class_name / confidence / bbox，以及 task=flower、model_id、class_name_en。bbox 为 null：这是整图分类，不定位多个花朵。
-- 上传结果的 average_confidence 为 Top-1，与实时、历史页面、后台口径一致。
-- 后台类别分布只统计当前花卉模型产生的记录。
-- Vue 前端使用 3000 端口，5001 是 API 服务；运行产物（模型权重、上传图片、数据库）通过 Git 忽略规则排除，不进入仓库。
+## 训练与评估
 
-## 运行
+数据为 flower_photos，共 3670 张，按类别约 70% / 15% / 15% 划分，随机种子 42：训练 2569、验证 551、测试 550。
+Adam，学习率 0.0002，weight decay 0.0001，batch size 32，交叉熵损失，训练 12 轮。
+增强包括颜色抖动、随机旋转、水平翻转和随机擦除。
+第 11 轮最佳验证准确率 93.65%；测试 Top-1 为 497/550 = 90.36%，Top-3 为 544/550 = 98.91%。
+训练记录及原始逐类指标保存在 `docs/training/`；应用服务复测结果保存在 `docs/flower-validation.json`。
+这些结果不代表任意实际拍摄场景的准确率；五分类的 Top-5 必然包含全部类别，不能用作有效准确率指标。
 
-在项目根目录打开两个 PowerShell 终端：
+## 本地运行
 
 ```powershell
-# 终端 1：已加载花卉模型的后端
+# 新环境：先创建 .venv 并安装 requirements.txt
+.\.venv\Scripts\python.exe scripts/download_flower_model.py --source "F:\BaiduNetdiskDownload\FlowerClassify\FlowerClassify\checkpoints\best-ckpt2.pt"
 .\start-backend.ps1
-# 终端 2：前端
+# 另一个终端
 .\start-frontend.ps1
 ```
 
-访问 http://127.0.0.1:3000 。
-不要用 start-preview.ps1 启动真实识别：该脚本用于不加载模型的页面预览。
-若已有后端进程占用 5001 端口，请先在它的终端按 Ctrl+C。
+前端 http://127.0.0.1:3000，后端 http://127.0.0.1:5001。
+`start-preview.ps1` 是不加载模型的页面预览。
+`FLOWER_MODEL_DIR` 可指定包含新权重和五类 `labels.json` 的目录；`FLOWER_DEVICE` 默认 cpu，`FLOWER_NUM_THREADS` 默认 4。
 
-新环境：创建 `.venv`，安装 `requirements.txt`，前端安装 package-lock.json 对应依赖。
-若权重缺失，在根目录执行：
+## 部署
 
-```powershell
-.\.venv\Scripts\python.exe scripts/download_flower_model.py
-# 可选：下载测试数据集（运行识别不需要数据集）
-.\.venv\Scripts\python.exe scripts/download_flower_model.py --test-data
-```
+权重不进入 Git。Render 构建继续执行 `scripts/render-build.sh`，该脚本通过安装器检查或下载新权重。
+需要将自己的 `best-ckpt2.pt` 放在可下载的位置，并设置 `FLOWER_MODEL_URL` 为其 HTTPS 直链；本仓库不预设尚不存在的下载地址。
+下载后必须通过上述 SHA256 校验。缺失配置或哈希不符时构建失败。
 
-模型约 44.8 MB。环境变量 FLOWER_MODEL_DIR 可调整资产目录；FLOWER_DEVICE 默认 cpu，FLOWER_NUM_THREADS 默认 4。
+## 接口与历史
 
-## 模型文件与预处理
+单图 `/api/detect`、批量 `/api/detect/batch`、实时 `/api/detect/realtime` 的响应结构不变。
+结果包含 class、class_name、class_name_en、confidence、bbox=null、task=flower、model_id。
+保留按概率排序的五个候选，即全部五类。average_confidence 为第一候选概率，不是模型准确率。
+历史记录保留原来的类别名称、索引和模型标识，不重新解释旧索引，不需要数据库改表。
+管理后台识别总数包含所有历史记录；类别分布及平均信心度只统计当前 model_id，预览模式下这两项为空/0。
 
-- 权重 `best-ckpt1.pt` 与测试集压缩包在下载时按 SHA256 自动校验，校验值固定在 `scripts/download_flower_model.py` 中。
-- 权重通过 torch.load(weights_only=True) 加载，与本地 torchvision ResNet18 严格匹配全部参数。
-- 标签按字典序 Bellflower ... Tulip 排列，`model_assets/flower-resnet18/labels.json` 保存索引与中文名称。
-- 预处理：RGB、Resize((224,224))、ToTensor、均值和标准差均为 (0.5,0.5,0.5)，并纠正 EXIF 方向；上传与实时识别保持一致。
-
-## 验证结果
-
-本机 Python 3.10、PyTorch 2.8.0+cpu、torchvision 0.23.0+cpu。
-
-- 全部模型参数严格加载成功，真实输入得到 10 类输出。
-- 测试集每类按文件名排序取前 10 张，共 100 张，Top-1 正确 96 张。康乃馨 8/10，玫瑰与郁金香各 9/10，其余各 10/10。
-- 明细见 flower-validation.json。这是固定小样本检查，不是完整测试集成绩，也不是独立实际拍摄准确率。
-- tests/test_flower_integration.py：真实模型通过单图、结果图、历史、类别统计、批量部分失败、实时一致性、鉴权、格式拒绝和预览模式检查。测试使用临时 SQLite 与临时 uploads，不污染业务数据。
-- 前端 npm run build 通过。
-- docs/sample-flowers 保存三张示例图片，供本地上传体验。
+## 验证
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest discover -s tests -p test_flower_integration.py -v
+.\.venv\Scripts\python.exe -X utf8 -m unittest discover -s tests -v
+.\.venv\Scripts\python.exe scripts/validate_flower_model.py "F:\BaiduNetdiskDownload\FlowerClassify\FlowerClassify\datasets\test"
 npm.cmd --prefix flower_classification_frontend run build
 ```
 
-## 使用限制
+集成测试使用 `tests/fixtures/` 中五张带署名的固定样例及临时数据库、上传目录，运行识别和集成测试不需要完整数据集。
+这些样例是已正确分类的接口回归用例，不是准确率测试集。完整测试集评估使用上述独立命令。
 
-只支持上述 10 个类别，始终返回前 5 个候选；低置信度或非花图片也可能给出错误甚至高置信度答案，结果仅供参考，不具备未知花种/非花拒识能力。
+## 限制
+
+只能识别雏菊、蒲公英、玫瑰、向日葵、郁金香这五类花卉。
+系统是整图分类，不提供多花定位或未知花种/非花拒识；其他图片也可能返回高置信度候选。

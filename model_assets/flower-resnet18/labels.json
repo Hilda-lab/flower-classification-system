@@ -1,12 +1,27 @@
 [
-  {"id": 0, "name": "风铃草", "name_en": "Bellflower"},
-  {"id": 1, "name": "康乃馨", "name_en": "Carnation"},
-  {"id": 2, "name": "雏菊", "name_en": "Daisy"},
-  {"id": 3, "name": "蒲公英", "name_en": "Dandelion"},
-  {"id": 4, "name": "薰衣草", "name_en": "Lavender"},
-  {"id": 5, "name": "百合", "name_en": "Lily"},
-  {"id": 6, "name": "荷花", "name_en": "Lotus"},
-  {"id": 7, "name": "玫瑰", "name_en": "Rose"},
-  {"id": 8, "name": "向日葵", "name_en": "Sunflower"},
-  {"id": 9, "name": "郁金香", "name_en": "Tulip"}
+  {
+    "id": 0,
+    "name": "雏菊",
+    "name_en": "daisy"
+  },
+  {
+    "id": 1,
+    "name": "蒲公英",
+    "name_en": "dandelion"
+  },
+  {
+    "id": 2,
+    "name": "玫瑰",
+    "name_en": "roses"
+  },
+  {
+    "id": 3,
+    "name": "向日葵",
+    "name_en": "sunflowers"
+  },
+  {
+    "id": 4,
+    "name": "郁金香",
+    "name_en": "tulips"
+  }
 ]

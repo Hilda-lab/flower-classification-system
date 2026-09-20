@@ -1,0 +1,44 @@
+{
+  "top1_accuracy": 0.9036,
+  "top3_accuracy": 0.9891,
+  "macro_precision": 0.9053,
+  "macro_recall": 0.8997,
+  "macro_f1": 0.8999,
+  "per_class": [
+    {
+      "class": "daisy",
+      "precision": 0.8611,
+      "recall": 0.9789,
+      "f1": 0.9163,
+      "support": 95
+    },
+    {
+      "class": "dandelion",
+      "precision": 0.9552,
+      "recall": 0.9552,
+      "f1": 0.9552,
+      "support": 134
+    },
+    {
+      "class": "roses",
+      "precision": 0.9,
+      "recall": 0.75,
+      "f1": 0.8182,
+      "support": 96
+    },
+    {
+      "class": "sunflowers",
+      "precision": 0.9796,
+      "recall": 0.9143,
+      "f1": 0.9458,
+      "support": 105
+    },
+    {
+      "class": "tulips",
+      "precision": 0.8308,
+      "recall": 0.9,
+      "f1": 0.864,
+      "support": 120
+    }
+  ]
+}

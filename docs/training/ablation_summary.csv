@@ -1,0 +1,3 @@
+﻿variant,best_valid_accuracy,epochs,train_subset_size
+pretrained,0.9201,6,1500
+scratch,0.6661,6,1500

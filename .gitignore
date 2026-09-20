@@ -57,7 +57,6 @@ server.log
 uploads/
 flower_classification_backend/backend/uploads/
 flower_classification_frontend/dist/
-model_assets/flower-resnet18/datasets.zip
 
 # --- 数据文件与模型权重 ---
 datasets/
@@ -82,3 +81,6 @@ best.mlpackage/
 # 忽略所有 txt 格式的 cookie 文件
 cookies.txt
 **/cookies.txt
+
+# Small attributed test fixtures
+!tests/fixtures/*.jpg
