@@ -66,6 +66,8 @@ data/labels/
 *.zip
 *.tar
 *.pt
+# Include the deployed five-class model in the repository
+!model_assets/flower-resnet18/best-ckpt2.pt
 
 # --- Core ML 模型包 ---
 *.mlpackage/

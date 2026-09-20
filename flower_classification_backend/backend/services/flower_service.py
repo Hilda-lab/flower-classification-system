@@ -1,6 +1,6 @@
 """本地 ResNet18 花卉识别推理服务。
 
-加载 model_assets/flower-resnet18 下的权重与标签，执行 224×224 预处理并返回 Top-5 候选。
+加载 model_assets/flower-resnet18 下的权重与标签，执行 224×224 预处理并返回 Top-3 候选。
 详见 docs/FLOWER_MODEL.md。
 """
 import io
@@ -44,7 +44,7 @@ class FlowerService:
             logits = self.model(tensor)
             if logits.shape != (1, len(self.labels)) or not torch.isfinite(logits).all():
                 raise ValueError('花卉模型输出无效')
-            scores, indices = logits.softmax(dim=1)[0].topk(min(5, len(self.labels)))
+            scores, indices = logits.softmax(dim=1)[0].topk(min(3, len(self.labels)))
         results = []
         for score, index in zip(scores.tolist(), indices.tolist()):
             label = self.labels[index]

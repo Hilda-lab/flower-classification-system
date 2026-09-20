@@ -17,13 +17,13 @@ Adam，学习率 0.0002，weight decay 0.0001，batch size 32，交叉熵损失�
 增强包括颜色抖动、随机旋转、水平翻转和随机擦除。
 第 11 轮最佳验证准确率 93.65%；测试 Top-1 为 497/550 = 90.36%，Top-3 为 544/550 = 98.91%。
 训练记录及原始逐类指标保存在 `docs/training/`；应用服务复测结果保存在 `docs/flower-validation.json`。
-这些结果不代表任意实际拍摄场景的准确率；五分类的 Top-5 必然包含全部类别，不能用作有效准确率指标。
+这些结果不代表任意实际拍摄场景的准确率。
 
 ## 本地运行
 
 ```powershell
-# 新环境：先创建 .venv 并安装 requirements.txt
-.\.venv\Scripts\python.exe scripts/download_flower_model.py --source "F:\BaiduNetdiskDownload\FlowerClassify\FlowerClassify\checkpoints\best-ckpt2.pt"
+# 新环境：克隆仓库后，先创建 .venv 并安装 requirements.txt
+# 仓库已包含 best-ckpt2.pt，启动时自动校验
 .\start-backend.ps1
 # 另一个终端
 .\start-frontend.ps1
@@ -35,15 +35,16 @@ Adam，学习率 0.0002，weight decay 0.0001，batch size 32，交叉熵损失�
 
 ## 部署
 
-权重不进入 Git。Render 构建继续执行 `scripts/render-build.sh`，该脚本通过安装器检查或下载新权重。
-需要将自己的 `best-ckpt2.pt` 放在可下载的位置，并设置 `FLOWER_MODEL_URL` 为其 HTTPS 直链；本仓库不预设尚不存在的下载地址。
-下载后必须通过上述 SHA256 校验。缺失配置或哈希不符时构建失败。
+当前使用的 `best-ckpt2.pt` 纳入 Git，随代码一起提交和克隆；其他 `.pt` 文件继续忽略。
+Render 构建执行 `scripts/render-build.sh`，直接校验仓库中的权重，不需要配置下载地址。
+仅当权重文件缺失时，可用安装器的 `--source` 参数从本地恢复，或设置 `FLOWER_MODEL_URL` 为对应权重的 HTTPS 直链。文件必须通过上述 SHA256 校验；权重缺失且无可用来源或哈希不符时构建失败。
 
 ## 接口与历史
 
 单图 `/api/detect`、批量 `/api/detect/batch`、实时 `/api/detect/realtime` 的响应结构不变。
 结果包含 class、class_name、class_name_en、confidence、bbox=null、task=flower、model_id。
-保留按概率排序的五个候选，即全部五类。average_confidence 为第一候选概率，不是模型准确率。
+返回按概率排序的 Top-3 候选。概率仍由全部五类计算，不对前三项重新归一化，三项之和可能小于 100%。average_confidence 为第一候选概率，不是模型准确率。
+新识别记录保存三个候选；已有历史记录保留原候选数量。五类标签、权重、Top-1 结果及模型标识不变。
 历史记录保留原来的类别名称、索引和模型标识，不重新解释旧索引，不需要数据库改表。
 管理后台识别总数包含所有历史记录；类别分布及平均信心度只统计当前 model_id，预览模式下这两项为空/0。
 

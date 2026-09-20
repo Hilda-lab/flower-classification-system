@@ -3,6 +3,9 @@ import io
 import json
 import tempfile
 import unittest
+from unittest.mock import patch
+
+import torch
 from pathlib import Path
 
 from flower_classification_backend.backend.config import Config
@@ -48,6 +51,7 @@ class FlowerIntegrationTests(unittest.TestCase):
         response = self.upload()
         self.assertEqual(response.status_code, 200)
         data = response.get_json()
+        self.assertEqual(len(data['results']), 3)
         top = data['results'][0]
         self.assertEqual(top['class_name'], '向日葵')
         self.assertEqual(top['task'], 'flower')
@@ -96,9 +100,22 @@ class FlowerIntegrationTests(unittest.TestCase):
                 results, _, _ = model.detect_realtime((self.fixtures / f'{en}.jpg').read_bytes())
                 self.assertEqual((results[0]['class'], results[0]['class_name'], results[0]['class_name_en']),
                                  (index, cn, en))
-                self.assertEqual(len(results), 5)
-                self.assertEqual({r['class'] for r in results}, set(range(5)))
-                self.assertAlmostEqual(sum(r['confidence'] for r in results), 1, places=5)
+                self.assertEqual(len(results), 3)
+                self.assertEqual(len({r['class'] for r in results}), 3)
+                self.assertTrue(all(0 <= r['class'] < 5 for r in results))
+                self.assertLessEqual(sum(r['confidence'] for r in results), 1.000001)
+
+    def test_top3_keeps_full_five_class_probabilities(self):
+        model = self.app.extensions['model']
+        logits = torch.tensor([[0.0, 1.0, 2.0, 3.0, 4.0]], device=model.device)
+        expected = logits.softmax(dim=1)[0]
+        with patch.object(model.model, 'forward', return_value=logits):
+            results, _, confidence = model.detect_realtime(self.photo)
+        self.assertEqual([r['class'] for r in results], [4, 3, 2])
+        for result in results:
+            self.assertAlmostEqual(result['confidence'], expected[result['class']].item())
+        self.assertLess(sum(r['confidence'] for r in results), 1)
+        self.assertEqual(confidence, results[0]['confidence'])
 
     def test_batch_partial_failure(self):
         response = self.client.post('/api/detect/batch', headers=self.headers, data={
